@@ -17,3 +17,6 @@ Task
 1. news va car modelini yozish
 2. register va login 1ta boladi (sms orqali)
 3. user modeli (balance?)
+4. filter (category boyicha, brand boyicha, min_price, max_price [electro, hybrid, gas])
+5. search (car name boyicha)
+6. category, brand malumotlarini fixtures qilib yozib qoyish
