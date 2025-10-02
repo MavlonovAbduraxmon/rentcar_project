@@ -22,6 +22,10 @@ INSTALLED_APPS = [
 
     # My apps
     'apps.apps.AppsConfig',
+
+    # Third-Party apps
+    'drf_spectacular',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
