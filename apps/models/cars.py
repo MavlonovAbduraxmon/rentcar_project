@@ -19,7 +19,7 @@ class Car(CreatedBaseModel):
     name = CharField(max_length=255)
     category = ForeignKey('apps.Category', CASCADE, related_name="cars")
     brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
-    price_day = IntegerField()
+    # price_day = IntegerField()
     deposit = IntegerField()
     limit_day = IntegerField()
     fuel_type = CharField(
@@ -27,15 +27,13 @@ class Car(CreatedBaseModel):
         choices=[("electro", "Electro"), ("hybrid", "Hybrid"), ("gas", "Gas"), ("petrol", "Petrol")],
         default="gas"
     )
-    seats = IntegerField(default=4)
-    doors = IntegerField(default=4)
-    conditioner = BooleanField(default=True)
-    image = ImageField(upload_to='cars/%Y/%m/%d', validators=[FileExtensionValidator(['jpg', 'jpeg', 'png'])])
-    description = CKEditor5Field()
-
-
+    # seats = IntegerField(default=4)
+    # doors = IntegerField(default=4)
+    # conditioner = BooleanField(default=True)
+    # image = ImageField(upload_to='cars/%Y/%m/%d', validators=[FileExtensionValidator(['jpg', 'jpeg', 'png'])])
+    description = CKEditor5Field(blank=True, null=True)
 
 
 class CarImage(CreatedBaseModel):
     car = ForeignKey('apps.Car', CASCADE, related_name="images")
-    image = ImageField(upload_to='cars/images/')
+    image = ImageField(upload_to='cars/images/%Y/%m/%d')
