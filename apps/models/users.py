@@ -1,7 +1,7 @@
 import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.db.models import CharField, BigIntegerField, OneToOneField, CASCADE, DateField, TextField
+from django.db.models import CharField, BigIntegerField, OneToOneField, CASCADE, DateField, TextField, DecimalField
 from apps.models.base import UUIDBaseModel
 from apps.models.managers import CustomUserManager
 
@@ -10,7 +10,7 @@ class User(AbstractUser, UUIDBaseModel):
     phone = CharField(max_length=20, unique=True)
     email = None
     username = None
-
+    balance = DecimalField(max_digits=12, decimal_places=2, default=0)
     objects = CustomUserManager()
 
     REQUIRED_FIELDS = []
@@ -41,4 +41,4 @@ class UserProfile(UUIDBaseModel):
     birth_date = DateField()
     address = TextField()
     region = CharField(max_length=255)
-    university = CharField(max_length=255)
+    salary = CharField(max_length=255)
