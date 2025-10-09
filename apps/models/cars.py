@@ -1,7 +1,5 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.core.validators import FileExtensionValidator
-from django.db.models import ImageField, CASCADE, ForeignKey, BooleanField
-from django.db.models.fields import CharField, IntegerField, PositiveIntegerField
+from django.db.models import ImageField, CASCADE, ForeignKey, ManyToManyField
+from django.db.models.fields import CharField, IntegerField, TextField
 from django_ckeditor_5.fields import CKEditor5Field
 
 from apps.models.base import CreatedBaseModel, UUIDBaseModel
@@ -9,17 +7,18 @@ from apps.models.base import CreatedBaseModel, UUIDBaseModel
 
 class Category(UUIDBaseModel):
     name = CharField(max_length=120)
+    image = ImageField(upload_to='categories/images/%Y/%m/%d')
 
 
 class Brand(UUIDBaseModel):
     name = CharField(max_length=120)
+    logo = ImageField(upload_to='logos/images/%Y/%m/%d')
 
 
 class Car(CreatedBaseModel):
     name = CharField(max_length=255)
     category = ForeignKey('apps.Category', CASCADE, related_name="cars")
     brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
-    # price_day = IntegerField()
     deposit = IntegerField()
     limit_day = IntegerField()
     fuel_type = CharField(
@@ -27,13 +26,36 @@ class Car(CreatedBaseModel):
         choices=[("electro", "Electro"), ("hybrid", "Hybrid"), ("gas", "Gas"), ("petrol", "Petrol")],
         default="gas"
     )
-    # seats = IntegerField(default=4)
-    # doors = IntegerField(default=4)
-    # conditioner = BooleanField(default=True)
-    # image = ImageField(upload_to='cars/%Y/%m/%d', validators=[FileExtensionValidator(['jpg', 'jpeg', 'png'])])
     description = CKEditor5Field(blank=True, null=True)
+    features = ManyToManyField('apps.Feature', related_name="cars")
+
 
 
 class CarImage(CreatedBaseModel):
     car = ForeignKey('apps.Car', CASCADE, related_name="images")
     image = ImageField(upload_to='cars/images/%Y/%m/%d')
+
+
+class CarRate(CreatedBaseModel):
+    car = ForeignKey('apps.Car', CASCADE, related_name="rates")
+    duration_label = CharField(max_length=50)
+    min_duration = IntegerField()
+    max_duration = IntegerField()
+    price = IntegerField()
+
+    class Meta:
+        unique_together = ('car', 'min_duration', 'max_duration')
+        ordering = ['min_duration']
+
+    def __str__(self):
+        return f"{self.car.name}: {self.duration_label} - {self.price} UZS"
+
+class Feature(CreatedBaseModel):
+    name = CharField(max_length=100, unique=True)
+    icon_name = CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class FAQ(CreatedBaseModel):
+    text = TextField(max_length=1000)

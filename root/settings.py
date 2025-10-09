@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django_ckeditor_5',
     'django_filters',
     'rest_framework_simplejwt',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -41,6 +42,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    "localhost"
+    # ...
 ]
 
 ROOT_URLCONF = 'root.urls'

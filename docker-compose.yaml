@@ -1,0 +1,43 @@
+services:
+  backend_service:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_service
+
+  postgres_service:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=1
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
+
+# sudo su
+# cd /var/lib/docker/volumes/
+
+
+# docker compose up --scale backend_service=3
+# docker compose up --build -d
+# docker compose up -d
+# docker compose restart service_name
+# docker compose stop
+# docker compose down
+# docker compose down -v
+# docker logs -f container_name
+# docker compose logs -f container_name
+# docker compose stop backend_service
+# docker compose ps -a
+# docker exec -itu postgres postgres_yangi psql -c 'create database online_pdp_db;'
+# docker compose exec -itu postgres postgres_service psql -c 'create database online_pdp_db;'
+# docker compose start backend_service
+# docker compose exec -it backend_service sh
+# docker compose exec -it backend_service sh -c 'uv run python3 manage.py migrate'
+# docker compose exec -it backend_service sh -c 'uv run python3 manage.py createsuperuser'

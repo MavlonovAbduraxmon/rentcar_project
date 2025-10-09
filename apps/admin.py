@@ -116,8 +116,9 @@ class CategoryModelAdmin(admin.ModelAdmin):
 
 @admin.register(Car)
 class CarModelAdmin(admin.ModelAdmin):
-    list_display = 'id', 'name', 'price_day', 'category__name', 'limit_day', 'fuel_type', 'deposit',
-    search_fields = 'name',
+    # list_display = ('id', 'name', 'category__name', 'limit_day', 'fuel_type', 'deposit', 'features')
+    # search_fields = 'name'
+    pass
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('category')

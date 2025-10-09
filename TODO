@@ -20,3 +20,5 @@ Task
 4. filter (category boyicha, brand boyicha, min_price, max_price [electro, hybrid, gas])
 5. search (car name boyicha)
 6. category, brand malumotlarini fixtures qilib yozib qoyish
+
+qoyish
