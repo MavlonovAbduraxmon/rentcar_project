@@ -1,5 +1,6 @@
 from django.db.models import ImageField, CASCADE, ForeignKey, ManyToManyField
 from django.db.models.fields import CharField, IntegerField, TextField
+from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
 
 from apps.models.base import CreatedBaseModel, UUIDBaseModel
@@ -30,16 +31,17 @@ class Car(CreatedBaseModel):
     features = ManyToManyField('apps.Feature', related_name="cars")
     color = ForeignKey('apps.Color', CASCADE, related_name="color")
 
+    class Meta:
+        verbose_name = _("Car")
+        verbose_name_plural = _("Cars")
 
-class Color:
-    color = CharField(max_length=255)
 
 class CarImage(CreatedBaseModel):
     car = ForeignKey('apps.Car', CASCADE, related_name="images")
     image = ImageField(upload_to='cars/images/%Y/%m/%d')
 
 
-class CarRate(CreatedBaseModel):
+class CarTariff(CreatedBaseModel):
     car = ForeignKey('apps.Car', CASCADE, related_name="rates")
     duration_label = CharField(max_length=50)
     min_duration = IntegerField()
@@ -53,9 +55,10 @@ class CarRate(CreatedBaseModel):
     def __str__(self):
         return f"{self.car.name}: {self.duration_label} - {self.price} UZS"
 
-class Feature(CreatedBaseModel):
-    name = CharField(max_length=100, unique=True)
-    icon_name = CharField(max_length=50, blank=True, null=True)
+
+class Feature(CreatedBaseModel):  # TODO fix
+    name = CharField(max_length=100)
+    icon_name = CharField(max_length=50)
 
     def __str__(self):
         return self.name

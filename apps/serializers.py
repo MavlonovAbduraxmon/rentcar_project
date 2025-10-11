@@ -14,7 +14,6 @@ from apps.models.news import New
 from apps.models.users import AdminProfile, UserProfile
 
 
-
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
@@ -69,6 +68,7 @@ class RegisterSerializer(ModelSerializer):
             password=validated_data["password"]
         )
         return user
+
 
 class SendSmsCodeSerializer(Serializer):
     phone = CharField(default='901001010')

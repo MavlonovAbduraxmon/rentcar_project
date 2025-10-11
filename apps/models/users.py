@@ -7,6 +7,7 @@ from apps.models.managers import CustomUserManager
 
 
 class User(AbstractUser, UUIDBaseModel):
+    # TODO type (admin, user)
     phone = CharField(max_length=20, unique=True)
     email = None
     username = None
