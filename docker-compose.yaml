@@ -7,6 +7,9 @@ services:
       - "8000:8000"
     depends_on:
       - postgres_service
+      - redis_service
+    volumes:
+      - .:/app
 
   postgres_service:
     image: postgres:alpine

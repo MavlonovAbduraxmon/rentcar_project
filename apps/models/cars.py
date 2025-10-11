@@ -16,6 +16,8 @@ class Brand(UUIDBaseModel):
 
 
 class Car(CreatedBaseModel):
+    class Color:
+        color = CharField(max_length=255)
     name = CharField(max_length=255)
     category = ForeignKey('apps.Category', CASCADE, related_name="cars")
     brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
