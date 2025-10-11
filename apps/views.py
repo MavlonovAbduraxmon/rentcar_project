@@ -96,3 +96,11 @@ class AuthListAPIView(ListAPIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({"message": "Login successful", "token": "jwt-token-here"})
+
+
+class CarViewSet(ModelViewSet):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = CarFilter
+    search_fields = ["name"]

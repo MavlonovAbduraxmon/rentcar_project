@@ -16,8 +16,6 @@ class Brand(UUIDBaseModel):
 
 
 class Car(CreatedBaseModel):
-    class Color:
-        color = CharField(max_length=255)
     name = CharField(max_length=255)
     category = ForeignKey('apps.Category', CASCADE, related_name="cars")
     brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
@@ -30,8 +28,11 @@ class Car(CreatedBaseModel):
     )
     description = CKEditor5Field(blank=True, null=True)
     features = ManyToManyField('apps.Feature', related_name="cars")
+    color = ForeignKey('apps.Color', CASCADE, related_name="color")
 
 
+class Color:
+    color = CharField(max_length=255)
 
 class CarImage(CreatedBaseModel):
     car = ForeignKey('apps.Car', CASCADE, related_name="images")
@@ -60,4 +61,5 @@ class Feature(CreatedBaseModel):
         return self.name
 
 class FAQ(CreatedBaseModel):
-    text = TextField(max_length=1000)
+    question = TextField(max_length=1000)
+    answer = TextField(max_length=1000)
