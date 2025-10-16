@@ -1,0 +1,51 @@
+[
+  {
+    "model": "Brand",
+    "fields": {
+      "name": "CHEVROLET"
+    }
+  },
+
+  {
+    "model": "Brand",
+    "fields": {
+      "name": "ISUZU"
+    }
+  },
+
+  {
+    "model": "Brand",
+    "fields": {
+      "name": "KIA"
+    }
+  },
+
+  {
+    "model": "Brand",
+    "fields": {
+      "name": "HYUNDAI"
+    }
+  },
+
+  {
+    "model": "Brand",
+    "fields": {
+      "name": "TOYOTA"
+    }
+  },
+
+  {
+    "model": "Brand",
+    "fields": {
+
+      "name": "BYD"
+    }
+  },
+
+  {
+    "model": "Brand",
+    "fields": {
+      "name": "LIXIANG"
+    }
+  }
+]

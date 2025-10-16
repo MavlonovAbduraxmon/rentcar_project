@@ -1,0 +1,43 @@
+[
+  {
+    "model": "Category",
+    "fields": {
+      "name": "Budget-friendlies"
+    }
+  },
+
+  {
+    "model": "Category",
+    "fields": {
+      "name": "Premiums"
+    }
+  },
+
+  {
+    "model": "Category",
+    "fields": {
+      "name": "Crossovers"
+    }
+  },
+
+  {
+    "model": "Category",
+    "fields": {
+      "name": "SUVs"
+    }
+  },
+
+  {
+    "model": "Category",
+    "fields": {
+      "name": "Minivens"
+    }
+  },
+
+  {
+    "model": "Category",
+    "fields": {
+      "name": "Pick Ups"
+    }
+  }
+]
