@@ -1,7 +1,9 @@
 import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.db.models import CharField, BigIntegerField, OneToOneField, CASCADE, DateField, TextField, DecimalField
+from django.db.models import (CASCADE, BigIntegerField, CharField, DateField,
+                              DecimalField, OneToOneField, TextField)
+
 from apps.models.base import UUIDBaseModel
 from apps.models.managers import CustomUserManager
 

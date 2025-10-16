@@ -20,15 +20,15 @@ msgstr ""
 
 #: apps/admin.py:28
 msgid "Personal info"
-msgstr ""
+msgstr "Shaxsiy ma'lumotlar"
 
 #: apps/admin.py:30
 msgid "Permissions"
-msgstr ""
+msgstr "Ruxsatlar"
 
 #: apps/admin.py:41
 msgid "Important dates"
-msgstr ""
+msgstr "Muhim sanalar"
 
 #: apps/models/cars.py:24
 msgid "Name"

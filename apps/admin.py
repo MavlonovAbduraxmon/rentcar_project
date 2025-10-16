@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
-from apps.models import Category, Car, User
+
+from apps.models import Car, Category, User
 from apps.models.users import AdminProfile, UserProfile
 
 
