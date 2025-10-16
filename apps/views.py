@@ -1,19 +1,24 @@
 from random import randint
+
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (ListAPIView, ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView)
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet, ViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
 from apps.filters import CarFilter
 from apps.models import User
 from apps.models.cars import Brand, Car, Category
 from apps.models.news import New
-from apps.serializers import (LoginSerializer, SendSmsCodeSerializer,
-                              VerifySmsCodeSerializer, NewModelSerializer, CategoryModelSerializer, CarModelSerializer,
-                              BrandModelSerializer, RegisterModelSerializer, UserModelSerializer)
+from apps.serializers import (BrandModelSerializer, CarModelSerializer,
+                              CategoryModelSerializer, LoginSerializer,
+                              NewModelSerializer, RegisterModelSerializer,
+                              SendSmsCodeSerializer, UserModelSerializer,
+                              VerifySmsCodeSerializer)
 from apps.utils import check_sms_code, random_code, send_sms_code
 
 
@@ -29,6 +34,7 @@ class SendCodeAPIView(APIView):
         phone = serializer.data['phone']
         send_sms_code(phone, code)
         return Response({"message": "send sms code"})
+
 
 @extend_schema(tags=['Auth'])
 class LoginAPIView(APIView):
@@ -51,10 +57,12 @@ class NewsListCreateAPIView(ListCreateAPIView):
     queryset = New.objects.all().order_by('-created_at')
     serializer_class = NewModelSerializer
 
+
 @extend_schema(tags=['Brand & Category'])
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
+
 
 @extend_schema(tags=['Cars'])
 class CarListCreateAPIView(ListCreateAPIView):
@@ -72,6 +80,7 @@ class CarListCreateAPIView(ListCreateAPIView):
 class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Car.objects.all()
     serializer_class = CarModelSerializer
+
 
 @extend_schema(tags=['Brand & Category'])
 class BrandListCreateAPIView(ListCreateAPIView):

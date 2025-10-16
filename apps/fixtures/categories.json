@@ -1,43 +1,50 @@
 [
   {
-    "model": "Category",
+    "model": "apps.category",
+    "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560001",
     "fields": {
-      "name": "Budget-friendlies"
+      "name": "Budget-friendlies",
+      "image": "categories/images/2025/10/16/econom.png"
     }
   },
-
   {
-    "model": "Category",
+    "model": "apps.category",
+    "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560002",
     "fields": {
-      "name": "Premiums"
+      "name": "Premiums",
+      "image": "categories/images/2025/10/16/premium.png"
     }
   },
-
   {
-    "model": "Category",
+    "model": "apps.category",
+    "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560003",
     "fields": {
-      "name": "Crossovers"
+      "name": "Crossovers",
+      "image": "categories/images/2025/10/16/krossover.png"
     }
   },
-
   {
-    "model": "Category",
+    "model": "apps.category",
+    "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560004",
     "fields": {
-      "name": "SUVs"
+      "name": "SUVs",
+      "image": "categories/images/2025/01/01/suv.jpg"
     }
   },
-
   {
-    "model": "Category",
+    "model": "apps.category",
+    "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560005",
     "fields": {
-      "name": "Minivens"
+      "name": "Minivens",
+      "image": "categories/images/2025/01/01/miniven.jpg"
     }
   },
-
   {
-    "model": "Category",
+    "model": "apps.category",
+    "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560006",
     "fields": {
-      "name": "Pick Ups"
+      "name": "Pick Ups",
+      "image": "categories/images/2025/01/01/pickup.jpg"
     }
   }
 ]

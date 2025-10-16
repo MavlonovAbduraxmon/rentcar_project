@@ -1,10 +1,10 @@
 from django.urls import path
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from rest_framework_simplejwt.views import TokenObtainPairView
-from apps.views import (BrandListCreateAPIView, CategoryListCreateAPIView,
-                        LoginAPIView, NewsListCreateAPIView, SendCodeAPIView, CarListCreateAPIView)
 
-TokenObtainPairView
+from apps.views import (BrandListCreateAPIView, CarListCreateAPIView,
+                        CategoryListCreateAPIView, LoginAPIView,
+                        NewsListCreateAPIView, SendCodeAPIView)
+
 urlpatterns = [
     path('auth/send-code', SendCodeAPIView.as_view(), name='token_obtain_pair'),
     path('auth/verify-code', LoginAPIView.as_view(), name='token_obtain_pair'),

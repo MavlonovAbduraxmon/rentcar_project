@@ -79,8 +79,6 @@ class UserProxyModelAdmin(UserAdminMixin):
             return obj.userprofile.university
 
 
-
-
 class AdminProfileStackedInline(admin.StackedInline):
     model = AdminProfile
     min_num = 1
@@ -108,11 +106,10 @@ class CategoryModelAdmin(admin.ModelAdmin):
 
     @admin.display(description="Product names")
     def product_names(self, obj):
-        return ", ".join([car.name for car in obj.car_set.all()])
-
+        return ", ".join([car.name for car in obj.cars.all()])
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related('car_set')
+        return super().get_queryset(request).prefetch_related('cars')
 
 
 @admin.register(Car)

@@ -1,10 +1,11 @@
-from django.db.models import CASCADE, ForeignKey, ImageField, ManyToManyField, TextChoices, BooleanField
+from django.db.models import (CASCADE, BooleanField, ForeignKey, ImageField,
+                              ManyToManyField, TextChoices)
 from django.db.models.fields import CharField, IntegerField, TextField
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
-from apps.models.base import CreatedBaseModel, UUIDBaseModel
 from rest_framework.fields import DateTimeField
 
+from apps.models.base import CreatedBaseModel, UUIDBaseModel
 
 
 class Category(UUIDBaseModel):
@@ -21,17 +22,16 @@ class Brand(UUIDBaseModel):
     logo = ImageField(upload_to='logos/images/%Y/%m/%d')
 
 
-class FuelType(TextChoices):
-    GAS = 'gas', 'Gas'
-    ELECTRIC = 'electric', 'Electric'
-    HYBRID = 'hybrid', 'Hybrid'
-
-class TransmissionType(TextChoices):
-    MANUAL = 'manual', 'Manual',
-    AUTOMATIC = 'automatic', 'Automatic'
-
-
 class Car(CreatedBaseModel):
+    class FuelType(TextChoices):
+        GAS = 'gas', 'Gas'
+        ELECTRIC = 'electric', 'Electric'
+        HYBRID = 'hybrid', 'Hybrid'
+
+    class TransmissionType(TextChoices):
+        MANUAL = 'manual', 'Manual',
+        AUTOMATIC = 'automatic', 'Automatic'
+
     name = CharField(max_length=255)
     category = ForeignKey('apps.Category', CASCADE, related_name="cars")
     brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
@@ -46,6 +46,7 @@ class Car(CreatedBaseModel):
     class Meta:
         verbose_name = _("Car")
         verbose_name_plural = _("Cars")
+
 
 class CarColor(CreatedBaseModel):
     name = CharField(max_length=155)
@@ -73,6 +74,7 @@ class Feature(CreatedBaseModel):  # TODO fix
     name = CharField(max_length=155)
     description = CKEditor5Field(max_length=155)
 
+
 class FAQ(CreatedBaseModel):
     question = TextField()
     answer = TextField()
@@ -83,7 +85,7 @@ class FAQ(CreatedBaseModel):
 
 
 class LongTermRental(CreatedBaseModel):
-    car = ForeignKey('apps.Car',CASCADE, related_name='longtermrental')
+    car = ForeignKey('apps.Car', CASCADE, related_name='longtermrental')
     user = ForeignKey('apps.User', CASCADE, related_name='user')
     start_data = DateTimeField()
     end_data = DateTimeField()

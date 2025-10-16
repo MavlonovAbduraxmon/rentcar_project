@@ -1,4 +1,5 @@
 import re
+
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models import (CASCADE, BigIntegerField, CharField, DateField,
@@ -30,7 +31,6 @@ class User(AbstractUser, UUIDBaseModel):
     def save(self, *, force_insert=False, force_update=False, using=None, update_fields=None):
         self.check_phone()
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
-
 
 
 class AdminProfile(UUIDBaseModel):

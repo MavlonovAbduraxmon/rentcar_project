@@ -13,7 +13,6 @@ server
 websocket
 
 
-Task
 1+. news va car modelini yozish
 2+. register va login 1ta boladi (sms orqali)
 3+. user modeli (balance?)
@@ -32,3 +31,6 @@ static tarjima
 dinamik tarjima
 
 
+Task
+1. brand, categories, faq, features fixture larini yozish
+2.
