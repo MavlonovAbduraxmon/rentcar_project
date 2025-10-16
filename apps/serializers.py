@@ -1,12 +1,12 @@
 import re
-from typing import Any
-from django.contrib.auth import authenticate
+
 from django.db.models import IntegerField
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.tokens import RefreshToken, Token
-from apps.models import Car, CarImage, Category, User
+
+from apps.models import Car, Category, User
 from apps.models.cars import Brand
 from apps.models.news import New
 from apps.models.users import AdminProfile, UserProfile

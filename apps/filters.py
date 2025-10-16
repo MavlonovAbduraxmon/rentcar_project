@@ -1,4 +1,4 @@
-from django_filters import FilterSet, NumberFilter, CharFilter
+from django_filters import CharFilter, FilterSet, NumberFilter
 
 from apps.models import Car
 
@@ -12,4 +12,4 @@ class CarFilter(FilterSet):
 
     class Meta:
         model = Car
-        fields = ['category_id', 'brand_id','fuel_type']
+        fields = ['category_id', 'brand_id', 'fuel_type']
