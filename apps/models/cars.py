@@ -1,5 +1,5 @@
 from django.db.models import (CASCADE, BooleanField, ForeignKey, ImageField,
-                              ManyToManyField, TextChoices)
+                              ManyToManyField, TextChoices, OneToOneField)
 from django.db.models.fields import CharField, IntegerField, TextField
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
@@ -41,7 +41,7 @@ class Car(CreatedBaseModel):
     description = CKEditor5Field(blank=True, null=True)
     features = ManyToManyField('apps.Feature', related_name="cars")
     transmission_type = CharField(max_length=15, choices=TransmissionType.choices, default=TransmissionType.AUTOMATIC)
-    tariff = ForeignKey('apps.CarTariff', CASCADE, related_name="cars")
+
 
     class Meta:
         verbose_name = _("Car")
@@ -58,6 +58,7 @@ class CarImage(CreatedBaseModel):
 
 
 class CarTariff(CreatedBaseModel):
+    car = OneToOneField('apps.Car', CASCADE, related_name="tariff")
     daily_price = IntegerField()
     one_to_three_day = IntegerField()
     three_to_seven_day = IntegerField()
