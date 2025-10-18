@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from apps.models import Car, Category, User
-from apps.models.users import AdminProfile, UserProfile
 
 
 class UserProxy(User):
@@ -19,6 +18,7 @@ class AdminProxy(User):
         proxy = True
         verbose_name = 'Admin'
         verbose_name_plural = 'Admins'
+
 
 @admin.register(User)
 class UserAdminMixin(UserAdmin):
@@ -55,18 +55,10 @@ class UserAdminMixin(UserAdmin):
         return super().get_queryset(request).filter(is_superuser=self.type)
 
 
-class UserProfileStackedInline(admin.StackedInline):
-    model = UserProfile
-    min_num = 1
-    extra = 1
-    max_num = 1
-
-
 @admin.register(UserProxy)
 class UserProxyModelAdmin(UserAdminMixin):
     type = False
     list_display = ['id', 'first_name', 'last_name', 'user_address', 'user_university']
-    inlines = [UserProfileStackedInline]
 
     @admin.display(description="Address", empty_value='')
     def user_address(self, obj):
@@ -79,18 +71,9 @@ class UserProxyModelAdmin(UserAdminMixin):
             return obj.userprofile.university
 
 
-class AdminProfileStackedInline(admin.StackedInline):
-    model = AdminProfile
-    min_num = 1
-    extra = 1
-    max_num = 1
-    readonly_fields = ['balance']
-
-
 @admin.register(AdminProxy)
 class AdminProxyModelAdmin(UserAdminMixin):
     type = True
-    inlines = [AdminProfileStackedInline]
     list_display = ['id', 'phone', 'admin_balance']
 
     @admin.display(description="Balance")
@@ -115,8 +98,8 @@ class CategoryModelAdmin(admin.ModelAdmin):
 @admin.register(Car)
 class CarModelAdmin(admin.ModelAdmin):
     list_display = 'brand', 'limit_day', 'category', 'transmission_type', 'fuel_type'
-    # search_fields = 'name'
 
+    # search_fields = 'name'
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('category')

@@ -3,13 +3,18 @@ import re
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db.models import (CASCADE, BigIntegerField, CharField, DateField,
-                              DecimalField, OneToOneField, TextField)
+                              DecimalField, OneToOneField, TextField, TextChoices)
 
 from apps.models.base import UUIDBaseModel
 from apps.models.managers import CustomUserManager
 
 
 class User(AbstractUser, UUIDBaseModel):
+
+    class Type(TextChoices):
+        ADMIN = 'admin', 'Admin',
+        USER = 'user', 'User'
+
     # TODO type (admin, user)
     phone = CharField(max_length=20, unique=True)
     email = None
@@ -31,17 +36,3 @@ class User(AbstractUser, UUIDBaseModel):
     def save(self, *, force_insert=False, force_update=False, using=None, update_fields=None):
         self.check_phone()
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
-
-
-class AdminProfile(UUIDBaseModel):
-    user = OneToOneField('apps.User', CASCADE)
-    balance = BigIntegerField(default=0)
-    telegram_id = BigIntegerField(null=True, blank=True)
-
-
-class UserProfile(UUIDBaseModel):
-    user = OneToOneField('apps.User', CASCADE)
-    birth_date = DateField()
-    address = TextField()
-    region = CharField(max_length=255)
-    salary = CharField(max_length=255)

@@ -1,15 +1,12 @@
 import re
 
-from django.db.models import IntegerField
+from django.db.models import IntegerField  # TODO fix
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.tokens import RefreshToken, Token
 
-from apps.models import Car, Category, User
-from apps.models.cars import Brand
-from apps.models.news import New
-from apps.models.users import AdminProfile, UserProfile
+from apps.models import New, Brand, Car, Category, User
 
 
 class CategoryModelSerializer(ModelSerializer):
@@ -73,18 +70,6 @@ class SendSmsCodeSerializer(Serializer):
 class LoginSerializer(Serializer):
     phone = CharField()
     code = CharField()
-
-
-class AdminProfileModelSerializer(ModelSerializer):
-    class Meta:
-        model = AdminProfile
-        fields = ["id", "user", "balance", "telegram_id"]
-
-
-class UserProfileModelSerializer(ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ["id", "region", "address", "salary"]
 
 
 class VerifySmsCodeSerializer(Serializer):
