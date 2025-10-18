@@ -3,7 +3,7 @@ from django.db.models import (CASCADE, BooleanField, ForeignKey, ImageField,
 from django.db.models.fields import CharField, IntegerField, TextField
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
-from rest_framework.fields import DateTimeField
+from rest_framework.fields import DateTimeField  # TODO fix
 
 from apps.models.base import CreatedBaseModel, UUIDBaseModel
 
@@ -70,7 +70,7 @@ class CarTariff(CreatedBaseModel):
         verbose_name_plural = _("CarTariffs")
 
 
-class Feature(CreatedBaseModel):  # TODO fix
+class Feature(CreatedBaseModel):
     icon = ImageField()
     name = CharField(max_length=155)
     description = CKEditor5Field(max_length=155)
