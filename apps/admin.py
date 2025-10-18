@@ -20,7 +20,7 @@ class AdminProxy(User):
         verbose_name = 'Admin'
         verbose_name_plural = 'Admins'
 
-
+@admin.register(User)
 class UserAdminMixin(UserAdmin):
     search_fields = ['phone']
     ordering = ("phone",)
@@ -114,9 +114,9 @@ class CategoryModelAdmin(admin.ModelAdmin):
 
 @admin.register(Car)
 class CarModelAdmin(admin.ModelAdmin):
-    # list_display = ('id', 'name', 'category__name', 'limit_day', 'fuel_type', 'deposit', 'features')
+    list_display = 'brand', 'limit_day', 'category', 'transmission_type', 'fuel_type'
     # search_fields = 'name'
-    pass
+
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('category')

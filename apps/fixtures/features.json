@@ -1,0 +1,74 @@
+[
+  {
+    "model": "Feature",
+    "pk": "d7f23b9e-4b68-4a6c-b6db-84574e37cc4c",
+    "fields": {
+      "icon": "features_icons/ac.png",
+      "name": "A/C",
+      "description": "Air conditioning for a comfortable drive in all weather conditions."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "a2b8df65-94e2-4b22-9dcb-3e0db1b68a11",
+    "fields": {
+      "icon": "features_icons/seats.png",
+      "name": "4 seats",
+      "description": "Comfortable seating capacity for up to four passengers."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "91e4e73a-58c7-4743-8712-ff8a4156cc6b",
+    "fields": {
+      "icon": "features_icons/large_bag.png",
+      "name": "1 large bag",
+      "description": "Spacious trunk space suitable for one large suitcase."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "c17a56a0-19bb-438d-9e63-ffb4d4c72a13",
+    "fields": {
+      "icon": "features_icons/small_bag.png",
+      "name": "2 small bags",
+      "description": "Additional storage for two small bags or backpacks."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "c2e6d78f-435f-4e74-96cf-d2b5aef44a69",
+    "fields": {
+      "icon": "features_icons/automatic.png",
+      "name": "Automatic transmission",
+      "description": "Easy and smooth driving experience with automatic gearbox."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "f0e2481e-65a5-4ee5-97b2-2230f13a6a43",
+    "fields": {
+      "icon": "features_icons/parking_sensors.png",
+      "name": "Parking sensors",
+      "description": "Smart parking sensors assist with safe and easy parking."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "5b15ffb4-9d6e-4a03-9647-41eae8cb3a71",
+    "fields": {
+      "icon": "features_icons/abs.png",
+      "name": "ABS",
+      "description": "Anti-lock braking system for enhanced safety and control."
+    }
+  },
+  {
+    "model": "Feature",
+    "pk": "6e2a4bde-1234-478c-bac1-9cc85a76d9f3",
+    "fields": {
+      "icon": "features_icons/airbags.png",
+      "name": "Front and rear airbags",
+      "description": "Full airbag protection for both front and rear passengers."
+    }
+  }
+]

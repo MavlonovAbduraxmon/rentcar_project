@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView)
+                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -25,15 +25,14 @@ from apps.utils import check_sms_code, random_code, send_sms_code
 @extend_schema(tags=['Auth'])
 class SendCodeAPIView(APIView):
     serializer_class = SendSmsCodeSerializer
-    authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
         serializer = SendSmsCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        code = random_code()
-        phone = serializer.data['phone']
+        phone = request.data['phone']
+        code = randint(100_000, 999_999)
         send_sms_code(phone, code)
-        return Response({"message": "send sms code"})
+        return Response({'message': "sms code sent"}, status.HTTP_200_OK)
 
 
 @extend_schema(tags=['Auth'])
@@ -63,6 +62,11 @@ class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
 
+@extend_schema(tags=['Brand & Category'])
+class CategoryRetrieveAPIView(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryModelSerializer
+
 
 @extend_schema(tags=['Cars'])
 class CarListCreateAPIView(ListCreateAPIView):
@@ -84,6 +88,12 @@ class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 @extend_schema(tags=['Brand & Category'])
 class BrandListCreateAPIView(ListCreateAPIView):
+    queryset = Brand.objects.all()
+    serializer_class = BrandModelSerializer
+
+
+@extend_schema(tags=['Brand & Category'])
+class BrandRetrieveAPIView(RetrieveAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
 
@@ -112,18 +122,6 @@ class CarViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
     search_fields = ["name"]
-
-
-class SendCodeAPIView(APIView):
-    serializer_class = SendSmsCodeSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = SendSmsCodeSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        phone = request.data['phone']
-        code = randint(100_000, 999_999)
-        send_sms_code(phone, code)
-        return Response({'message': "sms code sent"}, status.HTTP_200_OK)
 
 
 class VerifyCodeAPIView(APIView):

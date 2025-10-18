@@ -1,51 +1,58 @@
 [
   {
     "model": "Brand",
+    "pk": "8e3a2f94-bf3f-4cc0-b56f-2a3c7fd4b1a2",
     "fields": {
-      "name": "CHEVROLET"
+      "name": "CHEVROLET",
+      "logo": "brand_logos/chevrolet.png"
     }
   },
-
   {
     "model": "Brand",
+    "pk": "4a1b8f70-67b1-4b11-9e9b-0a8bdb76e22b",
     "fields": {
-      "name": "ISUZU"
+      "name": "ISUZU",
+      "logo": "brand_logos/isuzu.png"
     }
   },
-
   {
     "model": "Brand",
+    "pk": "9d9a5f47-61cb-4e79-9b17-4c2c528a5b93",
     "fields": {
-      "name": "KIA"
+      "name": "KIA",
+      "logo": "brand_logos/kia.png"
     }
   },
-
   {
     "model": "Brand",
+    "pk": "b34cfb5e-b68d-4a8c-a5d7-28a5a0a9cf6a",
     "fields": {
-      "name": "HYUNDAI"
+      "name": "HYUNDAI",
+      "logo": "brand_logos/hyundai.png"
     }
   },
-
   {
     "model": "Brand",
+    "pk": "2a6b3b2a-7c9f-4a35-b6c5-ff25bc3c47af",
     "fields": {
-      "name": "TOYOTA"
+      "name": "TOYOTA",
+      "logo": "brand_logos/toyota.png"
     }
   },
-
   {
     "model": "Brand",
+    "pk": "c5ef82a8-9a9c-4f3f-b6ef-8b2c2df7b94c",
     "fields": {
-
-      "name": "BYD"
+      "name": "BYD",
+      "logo": "brand_logos/byd.png"
     }
   },
-
   {
     "model": "Brand",
+    "pk": "1e8b7a5b-3e1f-4b7f-bc9c-fcf4d4326e23",
     "fields": {
-      "name": "LIXIANG"
+      "name": "LIXIANG",
+      "logo": "brand_logos/lixiang.png"
     }
   }
 ]

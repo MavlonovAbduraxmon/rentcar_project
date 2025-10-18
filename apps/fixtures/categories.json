@@ -20,7 +20,7 @@
     "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560003",
     "fields": {
       "name": "Crossovers",
-      "image": "categories/images/2025/10/16/krossover.png"
+      "image": "categories/images/2025/10/16/crossover.png"
     }
   },
   {
@@ -28,7 +28,7 @@
     "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560004",
     "fields": {
       "name": "SUVs",
-      "image": "categories/images/2025/01/01/suv.jpg"
+      "image": "categories/images/2025/01/01/suv.png"
     }
   },
   {
@@ -36,7 +36,7 @@
     "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560005",
     "fields": {
       "name": "Minivens",
-      "image": "categories/images/2025/01/01/miniven.jpg"
+      "image": "categories/images/2025/01/01/miniven.png"
     }
   },
   {
@@ -44,7 +44,7 @@
     "pk": "8b3b8b7c-7b5b-4c83-98e5-9b1234560006",
     "fields": {
       "name": "Pick Ups",
-      "image": "categories/images/2025/01/01/pickup.jpg"
+      "image": "categories/images/2025/01/01/pick_up.png"
     }
   }
 ]
