@@ -9,10 +9,11 @@ pyvenv.cfg
 .venv
 **/migrations/**
 !**/migrations/__init__.py
-media
 .env
 .idea
+media
 !media/categories/images/2025/10/16/
+!media/brand-logos/
 pip-selfcheck.json
 .idea/**/workspace.xml
 .idea/**/tasks.xml
