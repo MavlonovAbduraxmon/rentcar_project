@@ -1,6 +1,6 @@
 [
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "d7f23b9e-4b68-4a6c-b6db-84574e37cc4c",
     "fields": {
       "icon": "features_icons/ac.png",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "a2b8df65-94e2-4b22-9dcb-3e0db1b68a11",
     "fields": {
       "icon": "features_icons/seats.png",
@@ -18,7 +18,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "91e4e73a-58c7-4743-8712-ff8a4156cc6b",
     "fields": {
       "icon": "features_icons/large_bag.png",
@@ -27,7 +27,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "c17a56a0-19bb-438d-9e63-ffb4d4c72a13",
     "fields": {
       "icon": "features_icons/small_bag.png",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "c2e6d78f-435f-4e74-96cf-d2b5aef44a69",
     "fields": {
       "icon": "features_icons/automatic.png",
@@ -45,7 +45,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "f0e2481e-65a5-4ee5-97b2-2230f13a6a43",
     "fields": {
       "icon": "features_icons/parking_sensors.png",
@@ -54,7 +54,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "5b15ffb4-9d6e-4a03-9647-41eae8cb3a71",
     "fields": {
       "icon": "features_icons/abs.png",
@@ -63,7 +63,7 @@
     }
   },
   {
-    "model": "Feature",
+    "model": "apps.Feature",
     "pk": "6e2a4bde-1234-478c-bac1-9cc85a76d9f3",
     "fields": {
       "icon": "features_icons/airbags.png",

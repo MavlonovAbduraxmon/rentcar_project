@@ -1,11 +1,9 @@
 import re
-
-from django.db.models import IntegerField  # TODO fix
+from django.db.models.fields import IntegerField
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.tokens import RefreshToken, Token
-
 from apps.models import New, Brand, Car, Category, User
 
 

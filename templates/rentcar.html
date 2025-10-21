@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentCar.uz - Toshkentda Avtomobil Ijarasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .location, .hours {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .location::before {
+            content: "📍";
+        }
+
+        .hours::before {
+            content: "🕐";
+            color: #c41e3a;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f0f0f0;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.1);
+        }
+
+        header {
+            background: #1a1a1a;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #c41e3a;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #c41e3a;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-switch button {
+            background: transparent;
+            color: white;
+            border: 1px solid #444;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .lang-switch button:hover {
+            background: #c41e3a;
+            border-color: #c41e3a;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #8b0000 0%, #c41e3a 50%, #2c2c2c 100%);
+            padding: 80px 20px 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: #2c2c2c;
+            border-radius: 50% 50% 0 0;
+            transform: scaleX(1.5);
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1 {
+            color: white;
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .search-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background: #c41e3a;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            align-self: flex-end;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #a01729;
+        }
+
+        .dropdown-option {
+            background: rgba(196, 30, 58, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dropdown-option:hover {
+            background: rgba(196, 30, 58, 0.2);
+        }
+
+        .categories {
+            max-width: 1400px;
+            margin: -60px auto 60px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .category-card h3 {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .section {
+            max-width: 1400px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+        }
+
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .car-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .car-image {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .price-badge {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(196, 30, 58, 0.95);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .car-info {
+            padding: 20px;
+        }
+
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .car-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .car-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .car-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .car-deposit {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .car-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .contact-btn {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .contact-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .book-btn:hover {
+            background: #c41e3a;
+        }
+
+        .brands {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .brand-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .brand-logo {
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .brand-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        @media (max-width: 1200px) {
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .brands-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cars-grid {
+                grid-template-columns: 1fr;
+            }
+            .brands-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div style="display: flex; gap: 30px;">
+                <div class="location">Amir Timur Avenue 15</div>
+                <div class="hours">09:00-20:00</div>
+            </div>
+            <div class="contact-info">
+                <div class="social-icons">
+                    <a href="#" style="background: #1877f2;">📘</a>
+                    <a href="#" style="background: #25d366;">📱</a>
+                    <a href="#" style="background: #e4405f;">📷</a>
+                    <a href="#" style="background: #0088cc;">✈️</a>
+                </div>
+                <div>📧 info@rentcar.uz</div>
+                <div>📞 +998(97) 155-05-55</div>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">rent<span>car</span>.uz</div>
+            <ul class="nav-links">
+                <li><a href="#news">News</a></li>
+                <li><a href="#longterm">Long-term rental</a></li>
+                <li><a href="#driver">Car with driver</a></li>
+                <li><a href="#transfer">Transfer</a></li>
+                <li><a href="#rates">Rates</a></li>
+                <li><a href="#terms">Terms and Conditions</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="lang-switch">
+                <button>EN</button>
+                <button>UZS</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>CAR RENTAL IN TASHKENT</h1>
+            <div class="search-box">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label>Rent place</label>
+                        <input type="text" value="Tashkent, Amir temur a" placeholder="Tashkent, Amir temur a">
+                    </div>
+                    <div class="form-group">
+                        <label>Time of rent</label>
+                        <input type="date" value="2024-01-15">
+                    </div>
+                    <div class="form-group">
+                        <label></label>
+                        <input type="time" value="12:00">
+                    </div>
+                    <div class="form-group">
+                        <label>Time of return</label>
+                        <input type="time" value="12:00">
+                    </div>
+                    <button class="search-btn">🔍</button>
+                </div>
+                <div class="dropdown-option">
+                    ☑️ Another Drop-off Location
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories">
+        <div class="category-grid">
+            <div class="category-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Crect fill='%23ddd' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3ESedans%3C/text%3E%3C/svg%3E" alt="Budget-friendlies">
+                <h3>Budget-friendlies</h3>
+            </div>
+            <div class="category-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Crect fill='%23ddd' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3EPremium%3C/text%3E%3C/svg%3E" alt="Premiums">
+                <h3>Premiums</h3>
+            </div>
+            <div class="category-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Crect fill='%23ddd' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3ECrossover%3C/text%3E%3C/svg%3E" alt="Crossovers">
+                <h3>Crossovers</h3>
+            </div>
+            <div class="category-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Crect fill='%23ddd' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3ESUV%3C/text%3E%3C/svg%3E" alt="SUVs">
+                <h3>SUVs</h3>
+            </div>
+            <div class="category-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Crect fill='%23ddd' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3EMinivan%3C/text%3E%3C/svg%3E" alt="Minivans">
+                <h3>Minivans</h3>
+            </div>
+            <div class="category-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'%3E%3Crect fill='%23ddd' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999'%3EPickup%3C/text%3E%3C/svg%3E" alt="Pick Ups">
+                <h3>Pick Ups</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">THE BEST OFFERS FROM US</h2>
+        <div class="cars-grid">
+            <div class="car-card">
+                <div class="car-image">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect fill='%23333' width='400' height='250'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'%3EChevrolet Equinox%3C/text%3E%3C/svg%3E" alt="Chevrolet Equinox">
+                    <div class="price-badge">1 400 000 uzs for day</div>
+                </div>
+                <div class="car-info">
+                    <div class="car-header">
+                        <h3 class="car-name">CHEVROLET EQUINOX</h3>
+                        <img class="car-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='10'%3EChevrolet%3C/text%3E%3C/svg%3E" alt="Chevrolet">
+                    </div>
+                    <div class="car-details">
+                        <div class="detail-item">❄️ A/C</div>
+                        <div class="detail-item">👥 5</div>
+                        <div class="detail-item">💺 3</div>
+                        <div class="detail-item">🚗 4</div>
+                    </div>
+                    <div class="car-deposit">Deposit: 4 000 000 uzs | Limit: 300 km/day</div>
+                    <div class="car-actions">
+                        <button class="contact-btn">📱</button>
+                        <button class="contact-btn">✈️</button>
+                        <button class="contact-btn">📞</button>
+                    </div>
+                    <button class="book-btn">Book now</button>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect fill='%23444' width='400' height='250'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'%3ESkoda Kodiaq Style%3C/text%3E%3C/svg%3E" alt="Skoda Kodiaq">
+                    <div class="price-badge">1 200 000 uzs for day</div>
+                </div>
+                <div class="car-info">
+                    <div class="car-header">
+                        <h3 class="car-name">SKODA KODIAQ STYLE</h3>
+                        <img class="car-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='10'%3ESkoda%3C/text%3E%3C/svg%3E" alt="Skoda">
+                    </div>
+                    <div class="car-details">
+                        <div class="detail-item">❄️ A/C</div>
+                        <div class="detail-item">👥 7</div>
+                        <div class="detail-item">💺 3</div>
+                        <div class="detail-item">🚗 5</div>
+                    </div>
+                    <div class="car-deposit">Deposit: 4 000 000 uzs | Limit: 300 km/day</div>
+                    <div class="car-actions">
+                        <button class="contact-btn">📱</button>
+                        <button class="contact-btn">✈️</button>
+                        <button class="contact-btn">📞</button>
+                    </div>
+                    <button class="book-btn">Book now</button>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect fill='%23555' width='400' height='250'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'%3EToyota Land Cruiser%3C/text%3E%3C/svg%3E" alt="Toyota Land Cruiser">
+                    <div class="price-badge">2 600 000 uzs for day</div>
+                </div>
+                <div class="car-info">
+                    <div class="car-header">
+                        <h3 class="car-name">TOYOTA LAND CRUISER 200</h3>
+                        <img class="car-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='10'%3EToyota%3C/text%3E%3C/svg%3E" alt="Toyota">
+                    </div>
+                    <div class="car-details">
+                        <div class="detail-item">❄️ A/C</div>
+                        <div class="detail-item">👥 7</div>
+                        <div class="detail-item">💺 4</div>
+                        <div class="detail-item">🚗 6</div>
+                    </div>
+                    <div class="car-deposit">Deposit: 5 000 000 uzs | Limit: 300 km/day</div>
+                    <div class="car-actions">
+                        <button class="contact-btn">📱</button>
+                        <button class="contact-btn">✈️</button>
+                        <button class="contact-btn">📞</button>
+                    </div>
+                    <button class="book-btn">Book now</button>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect fill='%23666' width='400' height='250'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20'%3ELixiang L9 Ultra%3C/text%3E%3C/svg%3E" alt="Lixiang L9">
+                    <div class="price-badge">3 000 000 uzs for day</div>
+                </div>
+                <div class="car-info">
+                    <div class="car-header">
+                        <h3 class="car-name">LIXIANG L9 ULTRA</h3>
+                        <img class="car-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='10'%3ELixiang%3C/text%3E%3C/svg%3E" alt="Lixiang">
+                    </div>
+                    <div class="car-details">
+                        <div class="detail-item">❄️ A/C</div>
+                        <div class="detail-item">👥 7</div>
+                        <div class="detail-item">💺 4</div>
+                        <div class="detail-item">🚗 6</div>
+                    </div>
+                    <div class="car-deposit">Deposit: 5 000 000 uzs | Limit: 300 km/day</div>
+                    <div class="car-actions">
+                        <button class="contact-btn">📱</button>
+                        <button class="contact-btn">✈️</button>
+                        <button class="contact-btn">📞</button>
+                    </div>
+                    <button class="book-btn">Book now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="brands">
+        <h2 class="section-title">BRANDS</h2>
+        <div class="brands-grid">
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3EKIA%3C/text%3E%3C/svg%3E" alt="KIA">
+                <div class="brand-name">KIA</div>
+            </div>
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3EHYUNDAI%3C/text%3E%3C/svg%3E" alt="Hyundai">
+                <div class="brand-name">HYUNDAI</div>
+            </div>
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3ETOYOTA%3C/text%3E%3C/svg%3E" alt="Toyota">
+                <div class="brand-name">TOYOTA</div>
+            </div>
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3EBYD%3C/text%3E%3C/svg%3E" alt="BYD">
+                <div class="brand-name">BYD</div>
+            </div>
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3ELIXIANG%3C/text%3E%3C/svg%3E" alt="Lixiang">
+                <div class="brand-name">LIXIANG</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Qidiruv tugmasi funksiyasi
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            alert('Qidiruv funksiyasi ishga tushdi!');
+        });
+
+        // Book now tugmalari
+        document.querySelectorAll('.book-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Buyurtma berish sahifasiga o\'tilmoqda...');
+            });
+        });
+
+        // Kategoriya kartalari
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const category = this.querySelector('h3').textContent;
+                alert(category + ' kategoriyasi tanlandi!');
+            });
+        });
+
+        // Brend kartalari
+        document.querySelectorAll('.brand-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const brand = this.querySelector('.brand-name').textContent;
+                alert(brand + ' brendining mashinalari ko\'rsatilmoqda...');
+            });
+        });
+    </script>
+
+</body>
+</html>.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3ECHEVROLET%3C/text%3E%3C/svg%3E" alt="Chevrolet">
+                <div class="brand-name">CHEVROLET</div>
+            </div>
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='16'%3EISUZU%3C/text%3E%3C/svg%3E" alt="Isuzu">
+                <div class="brand-name">ISUZU</div>
+            </div>
+            <div class="brand-card">
+                <img class="brand-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www

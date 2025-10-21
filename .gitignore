@@ -10,6 +10,7 @@ pyvenv.cfg
 **/migrations/**
 !**/migrations/__init__.py
 media
+.env
 .idea
 !media/categories/images/2025/10/16/
 pip-selfcheck.json
