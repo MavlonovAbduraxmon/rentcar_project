@@ -5,7 +5,9 @@
     "fields": {
       "icon": "features_icons/ac.png",
       "name": "A/C",
-      "description": "Air conditioning for a comfortable drive in all weather conditions."
+      "description": "Air conditioning for a comfortable drive in all weather conditions.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -14,7 +16,9 @@
     "fields": {
       "icon": "features_icons/seats.png",
       "name": "4 seats",
-      "description": "Comfortable seating capacity for up to four passengers."
+      "description": "Comfortable seating capacity for up to four passengers.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -23,7 +27,9 @@
     "fields": {
       "icon": "features_icons/large_bag.png",
       "name": "1 large bag",
-      "description": "Spacious trunk space suitable for one large suitcase."
+      "description": "Spacious trunk space suitable for one large suitcase.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -32,7 +38,9 @@
     "fields": {
       "icon": "features_icons/small_bag.png",
       "name": "2 small bags",
-      "description": "Additional storage for two small bags or backpacks."
+      "description": "Additional storage for two small bags or backpacks.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -41,7 +49,9 @@
     "fields": {
       "icon": "features_icons/automatic.png",
       "name": "Automatic transmission",
-      "description": "Easy and smooth driving experience with automatic gearbox."
+      "description": "Easy and smooth driving experience with automatic gearbox.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -50,7 +60,9 @@
     "fields": {
       "icon": "features_icons/parking_sensors.png",
       "name": "Parking sensors",
-      "description": "Smart parking sensors assist with safe and easy parking."
+      "description": "Smart parking sensors assist with safe and easy parking.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -59,7 +71,9 @@
     "fields": {
       "icon": "features_icons/abs.png",
       "name": "ABS",
-      "description": "Anti-lock braking system for enhanced safety and control."
+      "description": "Anti-lock braking system for enhanced safety and control.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   },
   {
@@ -68,7 +82,9 @@
     "fields": {
       "icon": "features_icons/airbags.png",
       "name": "Front and rear airbags",
-      "description": "Full airbag protection for both front and rear passengers."
+      "description": "Full airbag protection for both front and rear passengers.",
+      "created_at": "2025-10-21T00:00:00Z",
+      "updated_at": "2025-10-21T00:00:00Z"
     }
   }
 ]
