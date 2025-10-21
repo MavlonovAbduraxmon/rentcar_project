@@ -10,3 +10,6 @@ class New(CreatedBaseModel):
     title = CharField(max_length=255)
     description = CKEditor5Field()
     image = ImageField(upload_to='news/%Y/%m/%d', validators=[FileExtensionValidator(['jpg', 'jpeg', 'png'])])
+
+    class Meta:
+        ordering = ['-created_at']

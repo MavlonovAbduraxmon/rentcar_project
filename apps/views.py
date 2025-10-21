@@ -53,7 +53,7 @@ class LoginAPIView(APIView):
 
 @extend_schema(tags=['News'])
 class NewsListCreateAPIView(ListCreateAPIView):
-    queryset = New.objects.all().order_by('-created_at')
+    queryset = New.objects.all()
     serializer_class = NewModelSerializer
 
 
@@ -61,6 +61,7 @@ class NewsListCreateAPIView(ListCreateAPIView):
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
+
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryRetrieveAPIView(RetrieveAPIView):
@@ -77,7 +78,7 @@ class CarListCreateAPIView(ListCreateAPIView):
     search_fields = ['name']
 
     def get_queryset(self):
-        return super().get_queryset().filter(Car.is_available)
+        return super().get_queryset()
 
 
 @extend_schema(tags=['Cars'])

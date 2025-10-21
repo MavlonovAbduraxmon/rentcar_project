@@ -20,17 +20,8 @@ websocket
 5+. search (car name boyicha)
 6+. category, brand malumotlarini fixtures qilib yozib qoyish
 7. kirilchani qoshish
-
+8. verify-code da codeni ham yuborish
+9.
 
 +categories.json
 python3 manage.py loaddata categories
-
-
-
-static tarjima
-dinamik tarjima
-
-
-Task
-1. brand, categories, faq, features fixture larini yozish
-2.
