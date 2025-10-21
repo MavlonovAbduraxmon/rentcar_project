@@ -14,6 +14,7 @@ pyvenv.cfg
 media
 !media/categories/images/2025/10/16/
 !media/brand-logos/
+
 pip-selfcheck.json
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -79,8 +80,8 @@ web_modules/
 .node_repl_history
 *.tgz
 .yarn-integrity
-.env
 .env.development.local
+.env
 .env.test.local
 .env.production.local
 .env.local
