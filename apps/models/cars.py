@@ -1,10 +1,8 @@
 from django.db.models import (CASCADE, BooleanField, ForeignKey, ImageField,
                               ManyToManyField, TextChoices, OneToOneField)
-from django.db.models.fields import CharField, IntegerField, TextField
+from django.db.models.fields import CharField, IntegerField, TextField, DateTimeField
 from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.fields import CKEditor5Field
-from rest_framework.fields import DateTimeField  # TODO fix
-
 from apps.models.base import CreatedBaseModel, UUIDBaseModel
 
 
@@ -21,6 +19,8 @@ class Brand(UUIDBaseModel):
     name = CharField(max_length=120)
     logo = ImageField(upload_to='logos/images/%Y/%m/%d')
 
+    def __str__(self):
+        return self.name
 
 class Car(CreatedBaseModel):
     class FuelType(TextChoices):
@@ -40,6 +40,7 @@ class Car(CreatedBaseModel):
     fuel_type = CharField(max_length=15, choices=FuelType.choices, default=FuelType.GAS)
     description = CKEditor5Field(blank=True, null=True)
     features = ManyToManyField('apps.Feature', related_name="cars")
+    color = ForeignKey('apps.CarColor', CASCADE, related_name="cars")
     transmission_type = CharField(max_length=15, choices=TransmissionType.choices, default=TransmissionType.AUTOMATIC)
 
 

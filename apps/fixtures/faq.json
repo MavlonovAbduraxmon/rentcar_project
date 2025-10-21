@@ -1,58 +1,58 @@
 [
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "e1c3b8c7-75a2-4b8a-ae12-f4f8c4206f31",
     "fields": {
-      "id": "e1c3b8c7-75a2-4b8a-ae12-f4f8c4206f31",
       "question": "What documents are required to rent a car in Uzbekistan?",
       "answer": "Passport and a valid driving license (national or international)."
     }
   },
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "9b4ef3b9-2d79-4b13-9cb5-4764a3dfd6d9",
     "fields": {
-      "id": "9b4ef3b9-2d79-4b13-9cb5-4764a3dfd6d9",
       "question": "Is it possible to rent a car without a deposit?",
-      "answer": "In most cases, a deposit is required, and the amount depends on the car category: Economy class — 3,000,000 UZS; Standard class — 4,000,000 UZS; Premium class — 5,000,000 UZS."
+      "answer": "In most cases, a deposit is required, and the amount depends on the car category: Economy — 3,000,000 UZS; Standard — 4,000,000 UZS; Premium — 5,000,000 UZS."
     }
   },
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "e9e36e32-b9f3-46d8-b08a-8a7f0a41f7db",
     "fields": {
-      "id": "e9e36e32-b9f3-46d8-b08a-8a7f0a41f7db",
       "question": "When will the deposit be refunded?",
-      "answer": "The deposit is refunded after the vehicle is returned and the handover act is signed, within 7–10 business days, subject to checks for fines or damages."
+      "answer": "The deposit is refunded after returning the car and signing the handover act, within 7–10 business days, after checking for fines or damages."
     }
   },
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "1d63b62f-b58c-46b7-bf42-7d8a60d06c83",
     "fields": {
-      "id": "1d63b62f-b58c-46b7-bf42-7d8a60d06c83",
       "question": "How does insurance work?",
       "answer": "The deductible acts as a security deposit. All other expenses are covered by insurance."
     }
   },
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "b5dcfe2f-bdd1-45b5-a8c3-4a390d6b55c0",
     "fields": {
-      "id": "b5dcfe2f-bdd1-45b5-a8c3-4a390d6b55c0",
-      "question": "What should I do in case of a road traffic accident?",
-      "answer": "Do not move the car from the scene of the road traffic accident. Contact the rental company and follow their instructions. If needed, call the police at 102. If insurance was purchased, damages will be covered by the insurance company."
+      "question": "What should I do in case of a traffic accident?",
+      "answer": "Do not move the vehicle. Contact the rental company and follow their instructions. If necessary, call 102. Insurance will cover damages if it was purchased."
     }
   },
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "a2c6a312-d38f-4f2b-954d-18c0c0df5e22",
     "fields": {
-      "id": "a2c6a312-d38f-4f2b-954d-18c0c0df5e22",
       "question": "What is the daily mileage limit?",
-      "answer": "300 km are provided per day, accumulated over the total rental period. Each extra km beyond the limit costs between 2,000 and 3,000 UZS depending on the car class."
+      "answer": "300 km per day are included, accumulated over the rental period. Extra km cost 2,000–3,000 UZS depending on car class."
     }
   },
   {
-    "model": "FAQ",
+    "model": "apps.FAQ",
+    "pk": "caa7e8dc-baf0-4a97-b71d-567be2b0cfad",
     "fields": {
-      "id": "caa7e8dc-baf0-4a97-b71d-567be2b0cfad",
       "question": "How much is airport delivery/pick-up?",
-      "answer": "The cost of airport delivery or pick-up depends on the location and time. Please contact the rental company for exact rates."
+      "answer": "The cost depends on location and time. Contact the company for details."
     }
   }
 ]

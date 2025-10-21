@@ -9,4 +9,6 @@ compile_msg:
 	python3 manage.py compilemessages -i .venv
 
 loaddata:
-	python3 manage.py loaddata categories, brand-logos, faq, features
+	python3 manage.py loaddata categories.json brands.json faq.json features.json
+
+#python3 manage.py loaddata categories.json
