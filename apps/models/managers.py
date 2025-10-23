@@ -25,3 +25,5 @@ class CustomUserManager(UserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(phone, password, **extra_fields)
+
+    create_superuser.alters_data = True

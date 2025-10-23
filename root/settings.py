@@ -29,8 +29,8 @@ INSTALLED_APPS = [
     # Third-Party apps
     'drf_spectacular',
     'rest_framework',
-    'django_ckeditor_5',
     'django_filters',
+    'django_ckeditor_5',
     'rest_framework_simplejwt',
     'debug_toolbar',
 ]

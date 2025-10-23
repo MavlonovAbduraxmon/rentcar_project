@@ -19,7 +19,7 @@ from apps.serializers import (BrandModelSerializer, CarModelSerializer,
                               NewModelSerializer, RegisterModelSerializer,
                               SendSmsCodeSerializer, UserModelSerializer,
                               VerifySmsCodeSerializer)
-from apps.utils import check_sms_code, random_code, send_sms_code
+from apps.utils import send_code
 
 
 @extend_schema(tags=['Auth'])
@@ -27,12 +27,12 @@ class SendCodeAPIView(APIView):
     serializer_class = SendSmsCodeSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = SendSmsCodeSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone = request.data['phone']
         code = randint(100_000, 999_999)
-        send_sms_code(phone, code)
-        return Response({'message': "sms code sent"}, status.HTTP_200_OK)
+        send_code(phone, code)
+        return Response({"message": "send sms code"})
 
 
 @extend_schema(tags=['Auth'])
@@ -44,7 +44,7 @@ class LoginAPIView(APIView):
         serializer = VerifySmsCodeSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
 
-        is_valid_code = check_sms_code(**serializer.data)
+        is_valid_code = send_code(**serializer.data)
         if not is_valid_code:
             return Response({"message": "invalid code"}, status.HTTP_400_BAD_REQUEST)
 
@@ -75,10 +75,10 @@ class CarListCreateAPIView(ListCreateAPIView):
     serializer_class = CarModelSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
-    search_fields = ['name']
+    search_fields = ['name', 'brand']
 
     def get_queryset(self):
-        return super().get_queryset()
+        return super().get_queryset().filter(is_available=True)
 
 
 @extend_schema(tags=['Cars'])
@@ -102,6 +102,7 @@ class BrandRetrieveAPIView(RetrieveAPIView):
 class UserListAPIView(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
+    # TODO
 
 
 class AuthListAPIView(ListAPIView):
@@ -125,6 +126,7 @@ class CarViewSet(ModelViewSet):
     search_fields = ["name"]
 
 
+@extend_schema(tags=['Auth'])
 class VerifyCodeAPIView(APIView):
     serializer_class = VerifySmsCodeSerializer
 

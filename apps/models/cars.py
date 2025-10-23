@@ -14,6 +14,8 @@ class Category(UUIDBaseModel):
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
+    def __str__(self):
+        return self.name
 
 class Brand(UUIDBaseModel):
     name = CharField(max_length=120)
@@ -37,12 +39,16 @@ class Car(CreatedBaseModel):
     brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
     deposit = IntegerField()
     limit_day = IntegerField()
+    main_photo = ImageField(upload_to='main_images/')
     fuel_type = CharField(max_length=15, choices=FuelType.choices, default=FuelType.GAS)
     description = CKEditor5Field(blank=True, null=True)
-    features = ManyToManyField('apps.Feature', related_name="cars")
-    color = ForeignKey('apps.CarColor', CASCADE, related_name="cars")
+    features = ManyToManyField('apps.Feature', related_name="Feature")
+    color = ForeignKey('apps.CarColor', CASCADE, related_name="color")
     transmission_type = CharField(max_length=15, choices=TransmissionType.choices, default=TransmissionType.AUTOMATIC)
+    is_available = BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = _("Car")
@@ -52,6 +58,8 @@ class Car(CreatedBaseModel):
 class CarColor(CreatedBaseModel):
     name = CharField(max_length=155)
 
+    def __str__(self):
+        return self.name
 
 class CarImage(CreatedBaseModel):
     car = ForeignKey('apps.Car', CASCADE, related_name="images")
@@ -76,6 +84,8 @@ class Feature(CreatedBaseModel):
     name = CharField(max_length=155)
     description = CKEditor5Field(max_length=155)
 
+    def __str__(self):
+        return self.name
 
 class FAQ(CreatedBaseModel):
     question = TextField()
@@ -86,13 +96,24 @@ class FAQ(CreatedBaseModel):
         verbose_name_plural = _("FAQs")
 
 
+class Reviews(UUIDBaseModel):
+    car = ForeignKey('apps.Car',CASCADE,related_name='reviews')
+    user = ForeignKey('apps.User', CASCADE, related_name='reviews')
+    stars = IntegerField()
+
+
 class LongTermRental(CreatedBaseModel):
+    class PaymentMethod(TextChoices):
+        CASH = 'cash', 'Cash'
+        CARD = 'card', 'Card'
+
     car = ForeignKey('apps.Car', CASCADE, related_name='longtermrental')
     user = ForeignKey('apps.User', CASCADE, related_name='user')
-    start_data = DateTimeField()
-    end_data = DateTimeField()
-    total_price = IntegerField()
-    is_paid = BooleanField(default=False)
+    pick_up_location = CharField(max_length=255)
+    pick_up_data_time = DateTimeField()
+    drop_of_location = CharField(max_length=255)
+    drop_of_data_time = DateTimeField()
+    payment_method = CharField(max_length=4, choices=PaymentMethod.choices, default=PaymentMethod.CARD)
 
     class Meta:
         verbose_name = _("LongTermRental")

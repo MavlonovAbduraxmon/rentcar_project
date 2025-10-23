@@ -5,6 +5,7 @@ description = "Add your description here"
 requires-python = ">=3.12"
 dependencies = [
     "argon2-cffi>=25.1.0",
+    "booktype>=1.5",
     "django>=5.2.7",
     "django-ckeditor-5>=0.2.18",
     "django-debug-toolbar>=6.0.0",

@@ -1,24 +1,20 @@
-from random import randint
-
 from django.core.cache import cache
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
 
 
-def random_code():
-    return randint(100_000, 999_999)  #
-
-
-def _get_login_key(phone):
+def get_login_data(phone):
     return f"login:{phone}"
 
+def send_code(phone:str,code:int,expired_time=60):
+    print(f'Phone: {phone} == Code: {code}')
+    _phone = get_login_data(phone)
+    cache.set(_phone,code)
 
-def send_sms_code(phone: str, code: int, expire_time=60):
-    print(f"[TEST] Phone: {phone} == Sms code: {code}")
-    _key = _get_login_key(phone)
-    cache.set(_key, code, expire_time)
-
-
-def check_sms_code(phone, code):
-    _key = _get_login_key(phone)
-    _code = cache.get(_key)
-    print(_code, code)
+def check_phone(phone:str, code:int):
+    _phone = get_login_data(phone)
+    _code = cache.get(_phone)
+    if _code is None:
+        raise ValidationError('Invalid phone number',status.HTTP_404_NOT_FOUND)
+    print(code,_code)
     return _code == code
