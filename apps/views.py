@@ -102,7 +102,6 @@ class BrandRetrieveAPIView(RetrieveAPIView):
 class UserListAPIView(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
-    # TODO
 
 
 class AuthListAPIView(ListAPIView):

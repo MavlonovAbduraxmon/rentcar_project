@@ -21,7 +21,7 @@ class BrandModelSerializer(ModelSerializer):
         fields = ["id", "name", "logo"]
 
 
-class CarFeatureModelSerializer(ModelSerializer):
+class FeatureModelSerializer(ModelSerializer):
     class Meta:
         model = Feature
         fields = 'name', 'description', 'icon'
@@ -34,7 +34,8 @@ class NewModelSerializer(ModelSerializer):
 
 
 class CarModelSerializer(ModelSerializer):
-    daily_price = SerializerMethodField()
+    price = SerializerMethodField()
+    features = FeatureModelSerializer(many=True)
     # carimages = CarImage(many=True, read_only=True)
 
     class Meta:
@@ -42,7 +43,7 @@ class CarModelSerializer(ModelSerializer):
         fields = '__all__'
 
 
-    def get_daily_price(self, obj):
+    def get_price(self, obj):
         price = CarTariff.objects.filter(car=obj.id).first()
         return price.daily_price if price else None
 
@@ -61,14 +62,14 @@ class CarImageModelSerializer(ModelSerializer):
 
 class CarDetailModelSerializer(ModelSerializer):
     brand = CharField(source='brand.name')
-    cartariff = CarTariffModelSerializer(many=True, source='price')
-    features = CarFeatureModelSerializer(many=True)
+    price = CarTariffModelSerializer(many=True, source='price')
+    features = FeatureModelSerializer(many=True)
     images = CarImageModelSerializer(many=True)
     similar_cars = SerializerMethodField()
 
     class Meta:
         model = Car
-        fields = 'id', 'name', 'brand', 'prices', 'features', 'similar_cars', 'main_photo', 'images'
+        fields = 'id', 'name', 'brand', 'price', 'features', 'similar_cars', 'main_photo', 'images'
         lookup_fields = 'id', 'model'
 
     def get_similar_cars(self, obj):
