@@ -156,7 +156,10 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Your project description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SWAGGER_UI_SETTINGS': {
+        'defaultModelsExpandDepth': -1
+    }
 }
 
 customColorPalette = [
@@ -258,13 +261,13 @@ JAZZMIN_SETTINGS = {
     "site_title": "Library Admin",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "P33 group",
+    "site_header": "Rentcar",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "P33 Group",
+    "site_brand": "Rentcar",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "apps/img/logo.jpeg",
+    "site_logo": "media/rentLogo/rentLogo.jpeg",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
     "login_logo": None,

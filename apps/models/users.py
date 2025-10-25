@@ -49,4 +49,3 @@ class UserProfile(UUIDBaseModel):
     birth_date = DateField()
     address = TextField()
     region = CharField(max_length=255)
-    university = CharField(max_length=255)

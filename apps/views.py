@@ -9,6 +9,7 @@ from rest_framework.generics import (ListAPIView, ListCreateAPIView,
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.filters import CarFilter
 from apps.models import User
@@ -36,7 +37,7 @@ class SendCodeAPIView(APIView):
 
 
 @extend_schema(tags=['Auth'])
-class LoginAPIView(APIView):
+class LoginAPIView(TokenObtainPairView):
     serializer_class = VerifySmsCodeSerializer
     authentication_classes = ()
 
@@ -102,7 +103,6 @@ class BrandRetrieveAPIView(RetrieveAPIView):
 class UserListAPIView(ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserModelSerializer
-    # TODO
 
 
 class AuthListAPIView(ListAPIView):

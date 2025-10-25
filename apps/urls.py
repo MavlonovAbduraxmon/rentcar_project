@@ -13,5 +13,4 @@ urlpatterns = [
     path('cars', CarListCreateAPIView.as_view(), name='car_model'),
     path('cars/<uuid:uuid>', CarRetrieveUpdateDestroyAPIView.as_view(), name='car_detail'),
     path('brands', BrandListCreateAPIView.as_view(), name='brand-list'),
-
 ]
