@@ -8,7 +8,6 @@ from apps.models.managers import CustomUserManager
 
 class User(AbstractUser, UUIDBaseModel):
     class Type(TextChoices):
-        SUPERUSER = 'superuser', 'Superuser'
         ADMIN = 'admin', 'Admin',
         USER = 'user', 'User'
 

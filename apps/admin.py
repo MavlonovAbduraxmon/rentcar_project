@@ -1,11 +1,12 @@
+from django.contrib import admin
 from django.contrib.admin import ModelAdmin, StackedInline
 from django.contrib.auth.models import Group
+from django.utils.translation import gettext_lazy as _
+
 from apps.models import CarImage, User, Car, Brand, Category, Feature, FAQ
 from apps.models.cars import CarColor, LongTermRental, CarTariff
 from apps.models.news import New
 from apps.models.users import AdminProfile, UserProfile
-from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
 
 
 class CarImageStackedInline(StackedInline):
@@ -14,9 +15,11 @@ class CarImageStackedInline(StackedInline):
     max_num = 8
     min_num = 1
 
+
 @admin.register(User)
 class UserAdmin(ModelAdmin):
     list_display = 'id', 'phone',
+
 
 @admin.register(Car)
 class CarAdminModel(ModelAdmin):
@@ -26,6 +29,7 @@ class CarAdminModel(ModelAdmin):
     def daily_price(self, obj):
         price = CarTariff.objects.filter(car=obj.id).first()
         return price.daily_price if price else "_"
+
     daily_price.short_description = 'Daily price'
 
 
@@ -33,17 +37,20 @@ class CarAdminModel(ModelAdmin):
 class CarBrandAdminModel(ModelAdmin):
     list_display = 'name', 'logo',
 
+
 @admin.register(CarColor)
 class CarColorAdminModel(ModelAdmin):
     list_display = 'name',
+
 
 @admin.register(Category)
 class CategoryAdminModel(ModelAdmin):
     list_display = 'name', 'image',
 
+
 @admin.register(Feature)
 class FeatureModelAdmin(ModelAdmin):
-    list_display = 'id','name','icon', 'description'
+    list_display = 'id', 'name', 'icon', 'description'
 
 
 @admin.register(CarImage)
@@ -58,26 +65,27 @@ class FAQModelAdmin(ModelAdmin):
 
 @admin.register(New)
 class NewModelAdmin(ModelAdmin):
-    list_display = 'id','title'
+    list_display = 'id', 'title'
 
 
 @admin.register(CarTariff)
 class CarTariff(ModelAdmin):
-    list_display = 'id','car', 'daily_price', 'one_to_three_day', 'three_to_seven_day', 'seven_to_half_month', 'half_to_one_month'
+    list_display = 'id', 'car', 'daily_price', 'one_to_three_day', 'three_to_seven_day', 'seven_to_half_month', 'half_to_one_month'
 
 
 @admin.register(LongTermRental)
 class LongTermRentalAdmin(ModelAdmin):
-    list_display = 'id','car', 'user', 'pick_up_location', 'pick_up_data_time', 'drop_of_location', 'drop_of_data_time', 'payment_method'
+    list_display = 'id', 'car', 'user', 'pick_up_location', 'pick_up_data_time', 'drop_of_location', 'drop_of_data_time', 'payment_method'
 
 
 admin.site.unregister(Group)
 
-class UserProxy(User):
+
+class ManagerProxy(User):
     class Meta:
         proxy = True
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+        verbose_name = 'Manager'
+        verbose_name_plural = 'Managers'
 
 
 class AdminProxy(User):
@@ -128,7 +136,7 @@ class UserProfileStackedInline(admin.StackedInline):
     max_num = 1
 
 
-@admin.register(UserProxy)
+@admin.register(ManagerProxy)
 class UserProxyModelAdmin(UserAdminMixin):
     type = False
     list_display = ['id', 'first_name', 'last_name', 'user_address', 'user_university']
@@ -143,8 +151,6 @@ class UserProxyModelAdmin(UserAdminMixin):
     def user_university(self, obj):
         if hasattr(obj, 'userprofile'):
             return obj.userprofile.university
-
-
 
 
 class AdminProfileStackedInline(admin.StackedInline):

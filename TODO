@@ -2,17 +2,6 @@ https://github.com/MavlonovAbduraxmon/RentCar_Project_8_modul.git
 https://rentcar.uz/
 
 
-docker compose
-Makefile
-isort, flake8
-minio
-redis
-postgres
-github cicd
-server
-websocket
-
-
 1+. news va car modelini yozish
 2+. register va login 1ta boladi (sms orqali)
 3+. user modeli (balance?)
@@ -25,3 +14,34 @@ websocket
 
 +categories.json
 python3 manage.py loaddata categories
+
+
+10. response ni dataga o'rash kerak
+{
+  "message": "Valid Code",
+  "access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNDA2NTkwLCJpYXQiOjE3NjE4MDE3OTAsImp0aSI6Ijc2NDRmYWJkMTY4YzQ2MGZhYWNiMjg2YTE0YTg5YmI0IiwidXNlcl9pZCI6ImNkYWEyZmRmLTQ2ZjQtNGFhNi04OGZmLWE5MzgwY2EzMTA5MyJ9.ii791_L6IA9azRD26Q6JPbN6zZJHLTTLWVYsx_-5RNM",
+  "refresh token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2NDM5Mzc5MCwiaWF0IjoxNzYxODAxNzkwLCJqdGkiOiI4OTRmNWIzMmU0NmI0NjI2YTliYTlmMDI4NzdmNThmMCIsInVzZXJfaWQiOiJjZGFhMmZkZi00NmY0LTRhYTYtODhmZi1hOTM4MGNhMzEwOTMifQ.q34DWM1KKsG5g39yb_-mWTs0_Kts0jIHl-qpeSsQp2E",
+  "id": "cdaa2fdf-46f4-4aa6-88ff-a9380ca31093",
+  "phone": "901001010"
+}
+
+{
+  "message": "Valid Code",
+  "data": {
+      "access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNDA2NTkwLCJpYXQiOjE3NjE4MDE3OTAsImp0aSI6Ijc2NDRmYWJkMTY4YzQ2MGZhYWNiMjg2YTE0YTg5YmI0IiwidXNlcl9pZCI6ImNkYWEyZmRmLTQ2ZjQtNGFhNi04OGZmLWE5MzgwY2EzMTA5MyJ9.ii791_L6IA9azRD26Q6JPbN6zZJHLTTLWVYsx_-5RNM",
+      "refresh token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2NDM5Mzc5MCwiaWF0IjoxNzYxODAxNzkwLCJqdGkiOiI4OTRmNWIzMmU0NmI0NjI2YTliYTlmMDI4NzdmNThmMCIsInVzZXJfaWQiOiJjZGFhMmZkZi00NmY0LTRhYTYtODhmZi1hOTM4MGNhMzEwOTMifQ.q34DWM1KKsG5g39yb_-mWTs0_Kts0jIHl-qpeSsQp2E",
+      "id": "cdaa2fdf-46f4-4aa6-88ff-a9380ca31093",
+      "phone": "901001010"
+  }
+}
+
+
+11. sms code yuborishda, qayta qayta yubormaslik kerak
+You have 114 seconds left
+
+
+12. swaggerda qulfchalarni togrilash
+
+13.
+
+
