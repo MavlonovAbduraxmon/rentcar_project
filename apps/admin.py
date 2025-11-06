@@ -52,7 +52,12 @@ class UserModelAdmin(UserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = 'id','user_id','first_name'
+    ist_display = ['id', 'phone', 'get_first_name']
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    get_first_name.short_description = "First Name"
 
 
 @admin.register(Car)
