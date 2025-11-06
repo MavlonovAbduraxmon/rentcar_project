@@ -9,13 +9,9 @@ https://rentcar.uz/
 5+. search (car name boyicha)
 6+. category, brand malumotlarini fixtures qilib yozib qoyish
 7. kirilchani qoshish
-8. verify-code da codeni ham yuborish
-9.
-
-+categories.json
-python3 manage.py loaddata categories
-
-
+8+. verify-code da codeni ham yuborish
+9.+categories.json
+  +python3 manage.py loaddata categories
 10. response ni dataga o'rash kerak
 {
   "message": "Valid Code",
@@ -40,8 +36,6 @@ python3 manage.py loaddata categories
 You have 114 seconds left
 
 
-12. swaggerda qulfchalarni togrilash
+12+. swaggerda qulfchalarni togrilash
 
 13.
-
-

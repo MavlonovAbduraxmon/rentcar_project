@@ -1,12 +1,14 @@
 import re
 from typing import Any
-from rest_framework.fields import IntegerField, SerializerMethodField
+
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import IntegerField, SerializerMethodField, HiddenField, CurrentUserDefault
 from rest_framework.serializers import ModelSerializer, Serializer, CharField
+from rest_framework_simplejwt.serializers import PasswordField
 from rest_framework_simplejwt.tokens import RefreshToken
-from apps.models import New, Brand, Car, Category, User, CarTariff, Feature, CarImage, LongTermRental
+
+from apps.models import New, Brand, Car, Category, User, CarTariff, Feature, CarImage, LongTermRental, UserProfile
 from apps.utils import check_phone
-from root.settings import LANGUAGE_CODE
 
 
 class CategoryModelSerializer(ModelSerializer):
@@ -40,7 +42,7 @@ class CarModelSerializer(ModelSerializer):
 
     class Meta:
         model = Car
-        fields = '__all__'
+        fields = 'id', "model", 'daily_price', 'deposit', 'limit_km', 'features'
 
 
     def get_price(self, obj):
@@ -88,6 +90,13 @@ class UserModelSerializer(ModelSerializer):
         model = User
         fields = ["id", "phone"]
 
+class VerifiedUserModelSerializer(ModelSerializer):
+    user = HiddenField(default=CurrentUserDefault())
+
+    class Meta:
+        model = UserProfile
+        exclude = ()
+
 
 class RegisterModelSerializer(ModelSerializer):
     class Meta:
@@ -105,6 +114,9 @@ class RegisterModelSerializer(ModelSerializer):
 
 class SendSmsCodeSerializer(Serializer):
     phone = CharField(default='901001010')
+    first_name = CharField(max_length=255, default='Alijon')
+    last_name = CharField(max_length=255, default='Valiyev')
+    password = PasswordField(max_length=255)
 
     def validate_phone(self, value):
         digits = re.findall(r'\d', value)

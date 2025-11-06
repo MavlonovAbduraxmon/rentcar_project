@@ -35,8 +35,8 @@ class Car(CreatedBaseModel):
         AUTOMATIC = 'automatic', 'Automatic'
 
     name = CharField(max_length=255)
-    category = ForeignKey('apps.Category', CASCADE, related_name="cars")
-    brand = ForeignKey('apps.Brand', CASCADE, related_name="cars")
+    category = ForeignKey('apps.Category', CASCADE, related_name="category")
+    brand = ForeignKey('apps.Brand', CASCADE, related_name="brand")
     deposit = IntegerField()
     limit_day = IntegerField()
     main_photo = ImageField(upload_to='main_images/')
@@ -80,7 +80,7 @@ class CarTariff(CreatedBaseModel):
 
 
 class Feature(CreatedBaseModel):
-    icon = ImageField()
+    icon = ImageField(upload_to='car/icons/features/%Y/%m/%d/')
     name = CharField(max_length=155)
     description = CKEditor5Field(max_length=155)
 
@@ -100,6 +100,7 @@ class Reviews(UUIDBaseModel):
     car = ForeignKey('apps.Car',CASCADE,related_name='reviews')
     user = ForeignKey('apps.User', CASCADE, related_name='reviews')
     stars = IntegerField()
+    comment = CKEditor5Field()
 
 
 class LongTermRental(CreatedBaseModel):
