@@ -5,21 +5,24 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView)
+                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.filters import CarFilter
-from apps.models import User
+from apps.models import LongTermRental, UserProfile
+from apps.models.base import IsAdminOrReadOnly, IsRegisteredUser
 from apps.models.cars import Brand, Car, Category
 from apps.models.news import New
+from apps.paginations import CustomCursorPagination
 from apps.serializers import (BrandModelSerializer, CarModelSerializer,
                               CategoryModelSerializer, LoginSerializer,
                               NewModelSerializer, RegisterModelSerializer,
-                              SendSmsCodeSerializer, UserModelSerializer,
-                              VerifySmsCodeSerializer)
+                              SendSmsCodeSerializer, VerifySmsCodeSerializer, LongTermRentalModelSerializer,
+                              VerifiedUserModelSerializer)
 from apps.utils import send_code
 
 
@@ -32,8 +35,10 @@ class SendCodeAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         phone = request.data['phone']
         code = randint(100_000, 999_999)
-        send_code(phone, code)
-        return Response({"message": "send sms code"})
+        valid, _ttl = send_code(phone, code,request.data)
+        if valid:
+            return Response({"message": "send sms code"})
+        return Response({'message':f'You have {_ttl} second left'})
 
 
 @extend_schema(tags=['Auth'])
@@ -56,19 +61,29 @@ class LoginAPIView(TokenObtainPairView):
 class NewsListCreateAPIView(ListCreateAPIView):
     queryset = New.objects.all()
     serializer_class = NewModelSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+@extend_schema(tags=['News'])
+class NewsModelViewSet(ModelViewSet):
+    queryset = New.objects.all()
+    serializer_class = NewModelSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
+    permission_classes = [IsAuthenticated,  IsAdminOrReadOnly]
 
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryRetrieveAPIView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-
+    permission_classes = [IsAuthenticated,  IsAdminOrReadOnly]
+    lookup_field = 'name'
 
 @extend_schema(tags=['Cars'])
 class CarListCreateAPIView(ListCreateAPIView):
@@ -77,6 +92,7 @@ class CarListCreateAPIView(ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
     search_fields = ['name', 'brand']
+    pagination_class = CustomCursorPagination
 
     def get_queryset(self):
         return super().get_queryset().filter(is_available=True)
@@ -86,23 +102,28 @@ class CarListCreateAPIView(ListCreateAPIView):
 class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Car.objects.all()
     serializer_class = CarModelSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
 
 @extend_schema(tags=['Brand & Category'])
 class BrandListCreateAPIView(ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
 
 
 @extend_schema(tags=['Brand & Category'])
 class BrandRetrieveAPIView(RetrieveAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
+    permission_classes = [IsAuthenticated,  IsAdminOrReadOnly]
+    lookup_field = 'name'
 
 
-class UserListAPIView(ReadOnlyModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserModelSerializer
+class UserProfileCreateAPIView(CreateAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = VerifiedUserModelSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class AuthListAPIView(ListAPIView):
@@ -118,7 +139,7 @@ class AuthListAPIView(ListAPIView):
         return Response({"message": "Login successful", "token": "jwt-token-here"})
 
 
-class CarViewSet(ModelViewSet):
+class CarModelViewSet(ModelViewSet):
     queryset = Car.objects.all()
     serializer_class = CarModelSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
@@ -131,6 +152,22 @@ class VerifyCodeAPIView(APIView):
     serializer_class = VerifySmsCodeSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = VerifySmsCodeSerializer(data=request.data, context={'request': request})
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.get_data())
+        validate_data = serializer.validated_data
+
+        return Response({"message":"successfully registered","data":validate_data}, status=status.HTTP_201_CREATED)
+
+
+@extend_schema(tags=['Rentals'])
+class LongTermRentalRetrieveAPIView(RetrieveAPIView, DestroyAPIView):
+    queryset = LongTermRental.objects.all()
+    serializer_class = LongTermRentalModelSerializer
+    permission_classes = [IsAuthenticated, IsRegisteredUser]
+
+
+@extend_schema(tags=['Rentals'])
+class LongTermRentalHistoryListAPIView(ListAPIView):
+    queryset = LongTermRental.objects.all()
+    serializer_class = LongTermRentalModelSerializer
+    permission_classes = [IsRegisteredUser, IsAdminOrReadOnly]

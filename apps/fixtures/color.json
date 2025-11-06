@@ -1,0 +1,23 @@
+[
+{
+    "model": "apps.carcolor",
+    "pk": "0bd3fedd-1273-41c4-9842-5e62abf0a136",
+    "fields": {
+        "name": "Silver"
+    }
+},
+{
+    "model": "apps.carcolor",
+    "pk": "45669231-bce0-48db-a18b-39cb4a2930b8",
+    "fields": {
+        "name": "Black"
+    }
+},
+{
+    "model": "apps.carcolor",
+    "pk": "581cc1a9-17b9-4ad4-9b7b-0e079c5b9a3f",
+    "fields": {
+        "name": "White"
+    }
+}
+]

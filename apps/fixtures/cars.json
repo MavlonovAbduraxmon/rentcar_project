@@ -1,0 +1,92 @@
+[
+{
+    "model": "apps.car",
+    "pk": "12d6aa16-b6d1-4c99-8053-dd163bc03bc9",
+    "fields": {
+        "created_at": "2025-10-18T16:25:50.445Z",
+        "updated_at": "2025-10-18T16:25:50.445Z",
+        "name": "K5 G515",
+        "brand": "72ffeba6-79e6-47bb-a86b-830bdc8bf115",
+        "category": "7031c303-8be0-4189-aa25-01492f72d539",
+        "color": "45669231-bce0-48db-a18b-39cb4a2930b8",
+        "year": "2022-10-01",
+        "deposit": 1200000,
+        "limit_km": 300,
+        "fuel_type": "gas",
+        "transmission_type": "automatic",
+        "is_available": true
+    }
+},
+{
+    "model": "apps.car",
+    "pk": "7eae7142-5d8c-4535-95bf-15dc4a0acbb0",
+    "fields": {
+        "created_at": "2025-10-18T17:00:05.512Z",
+        "updated_at": "2025-10-18T17:00:05.512Z",
+        "name": "G400d",
+        "brand": "dfdd10c2-f331-4396-9a3e-ad76bedf9cf0",
+        "category": "ecaf265a-864c-44cb-a4e2-1cbc6f0fd24f",
+        "color": "45669231-bce0-48db-a18b-39cb4a2930b8",
+        "year": "2024-10-10",
+        "deposit": 10000000,
+        "limit_km": 300,
+        "fuel_type": "gas",
+        "transmission_type": "automatic",
+        "is_available": true
+    }
+},
+{
+    "model": "apps.car",
+    "pk": "814d8c6d-476f-42a1-8411-a8affeb8bc6e",
+    "fields": {
+        "created_at": "2025-10-18T16:57:45.534Z",
+        "updated_at": "2025-10-18T16:57:45.534Z",
+        "name": "Gentra",
+        "brand": "673393d3-dcaf-4bcc-868f-26925211b88d",
+        "category": "8a066c5f-400e-4c6d-bf50-aaf8c1b54ab7",
+        "color": "45669231-bce0-48db-a18b-39cb4a2930b8",
+        "year": "2022-10-01",
+        "deposit": 3000000,
+        "limit_km": 300,
+        "fuel_type": "gas",
+        "transmission_type": "automatic",
+        "is_available": true
+    }
+},
+{
+    "model": "apps.car",
+    "pk": "ccf16752-0d30-4b15-ad0b-d48dda86fb4f",
+    "fields": {
+        "created_at": "2025-10-18T16:50:30.439Z",
+        "updated_at": "2025-10-18T16:50:30.439Z",
+        "name": "Malibu 2",
+        "brand": "673393d3-dcaf-4bcc-868f-26925211b88d",
+        "category": "7031c303-8be0-4189-aa25-01492f72d539",
+        "color": "45669231-bce0-48db-a18b-39cb4a2930b8",
+        "year": "2025-10-01",
+        "deposit": 1200000,
+        "limit_km": 300,
+        "fuel_type": "gas",
+        "transmission_type": "automatic",
+        "is_available": true
+    }
+},
+{
+    "model": "apps.car",
+    "pk": "e1bcec25-bef5-4560-8e32-72031e6b5f2b",
+    "fields": {
+        "created_at": "2025-10-18T16:56:46.424Z",
+        "updated_at": "2025-10-18T16:56:46.424Z",
+        "name": "Spark",
+        "brand": "673393d3-dcaf-4bcc-868f-26925211b88d",
+        "category": "8a066c5f-400e-4c6d-bf50-aaf8c1b54ab7",
+        "color": "581cc1a9-17b9-4ad4-9b7b-0e079c5b9a3f",
+        "year": "2020-10-15",
+        "deposit": 3000000,
+        "limit_km": 300,
+        "fuel_type": "gas",
+        "transmission_type": "manual",
+        "is_available": true
+    }
+}
+]

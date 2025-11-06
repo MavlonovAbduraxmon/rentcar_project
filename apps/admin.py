@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, StackedInline
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from apps.models import CarImage, User, Car, Brand, Category, Feature, FAQ
@@ -17,24 +19,67 @@ class CarImageStackedInline(StackedInline):
 
 
 @admin.register(User)
-class UserAdmin(ModelAdmin):
-    list_display = 'id', 'phone',
+class UserModelAdmin(UserAdmin):
+    list_display = 'id', 'phone', 'type'
+    ordering = ("phone",)
+    fieldsets = (
+        (None, {"fields": ("phone", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("phone", "usable_password", "password1", "password2"),
+            },
+        ),
+    )
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = 'id','user_id','first_name'
 
 
 @admin.register(Car)
 class CarAdminModel(ModelAdmin):
     list_display = 'name', 'brand', 'category', 'daily_price', 'deposit', 'transmission_type', 'fuel_type', 'is_available'
     list_filter = 'name', 'brand', 'category'
+    readonly_fields = ['car_image']
+    list_select_related = 'brand','category','color'
+    inlines = [CarImageStackedInline,]
+
 
     def daily_price(self, obj):
         price = CarTariff.objects.filter(car=obj.id).first()
         return price.daily_price if price else "_"
 
-    daily_price.short_description = 'Daily price'
+    def car_image(self, obj):
+        photos = CarImage.objects.filter(car_id=obj.id)
+        if photos.exists():
+            imgs = "".join(
+                [f'<img src="{photo.image.url}" width="50" height="50" style="margin:2px;" />' for photo in photos])
+        else:
+            imgs = f'<img src="/media/car/noimage.png" width="50" height="50" style="margin:2px;" />'
+        return mark_safe(imgs)
 
 
 @admin.register(Brand)
-class CarBrandAdminModel(ModelAdmin):
+class BrandAdminModel(ModelAdmin):
     list_display = 'name', 'logo',
 
 
@@ -78,9 +123,6 @@ class LongTermRentalAdmin(ModelAdmin):
     list_display = 'id', 'car', 'user', 'pick_up_location', 'pick_up_data_time', 'drop_of_location', 'drop_of_data_time', 'payment_method'
 
 
-admin.site.unregister(Group)
-
-
 class ManagerProxy(User):
     class Meta:
         proxy = True
@@ -95,35 +137,8 @@ class AdminProxy(User):
         verbose_name_plural = 'Admins'
 
 
-class UserAdminMixin(UserAdmin):
+class UserAdminMixin(UserModelAdmin):
     search_fields = ['phone']
-    ordering = ("phone",)
-    fieldsets = (
-        (None, {"fields": ("phone", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name")}),
-        (
-            _("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-            },
-        ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-    )
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": ("phone", "usable_password", "password1", "password2"),
-            },
-        ),
-    )
 
     def get_queryset(self, request):
         return super().get_queryset(request).filter(is_superuser=self.type)
@@ -172,3 +187,5 @@ class AdminProxyModelAdmin(UserAdminMixin):
         if hasattr(obj, 'adminprofile'):
             return obj.adminprofile.balance
         return 0
+
+admin.site.unregister(Group)

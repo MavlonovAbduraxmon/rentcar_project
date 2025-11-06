@@ -4,12 +4,9 @@ from rest_framework.response import Response
 
 
 class CustomCursorPagination(CursorPagination):
-    ordering = '-created_at'
-
-
-class CustomPageNumberPagination(PageNumberPagination):
     page_query_param = 'page_number'
     page_size_query_param = 'page_size'
+    ordering = '-created_at'
 
     def get_paginated_response(self, data):
         return Response({
