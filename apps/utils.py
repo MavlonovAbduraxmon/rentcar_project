@@ -6,37 +6,32 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import validate_email
 from redis import Redis
-from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
+def random_code():
+    return randint(100_000, 999_999)
 
-def get_login_data(value):
-    return f"login:{value}"
+
+def _get_login_key(phone):
+    return f"login:{phone}"
 
 
-def send_code(data, expired_time=60):
+def send_code(phone: str, code: int, expire_time=60):
     redis = Redis.from_url(settings.CACHES['default']['LOCATION'])
-    _phone = get_login_data(data['value'])
-    code = randint(100_000, 999_999)
-    _ttl = redis.ttl(f':1:{_phone}')
-
+    _key = _get_login_key(phone)
+    _ttl = redis.ttl(f':1:{_key}')
     if _ttl > 0:
         return False, _ttl
-
-    print(f'{data['type']}: {data['value']} == Code: {code}')
-    _data = {
-        'code': code,
-    }
-    cache.set(_phone, _data, expired_time)
+    print(f"[TEST] Phone: {phone} == Sms code: {code}")
+    cache.set(_key, code, expire_time)
     return True, 0
 
 
 def check_phone(phone: str, code: int):
-    _phone = get_login_data(phone['value'])
-    _data = cache.get(_phone)
-    if _data is None:
-        raise ValidationError('Invalid phone number', status.HTTP_404_NOT_FOUND)
-    return _data['code'] == code , _data
+    _key = _get_login_key(phone)
+    _code = cache.get(_key)
+    print(_code, code)
+    return _code == code
 
 def normalize_phone(value):
     digits = re.findall(r'\d', value)
