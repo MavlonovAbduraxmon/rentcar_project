@@ -1,14 +1,13 @@
+import code
+import re
 from typing import Any
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.core.exceptions import ValidationError as DjangoValidationError
-from django.contrib.auth.hashers import make_password
-from django.core.validators import validate_email
+from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField, SerializerMethodField, HiddenField, CurrentUserDefault
 from rest_framework.serializers import ModelSerializer, Serializer, CharField
-from rest_framework_simplejwt.serializers import PasswordField
+from rest_framework_simplejwt.tokens import RefreshToken, Token
 from apps.models import New, Brand, Car, Category, User, CarTariff, Feature, CarImage, LongTermRental, UserProfile
-from apps.utils import check_phone, find_contact_type, normalize_phone
+from apps.utils import find_contact_type
 
 
 class CategoryModelSerializer(ModelSerializer):
@@ -37,7 +36,7 @@ class NewModelSerializer(ModelSerializer):
 
 class CarModelSerializer(ModelSerializer):
     price = SerializerMethodField()
-    features = FeatureModelSerializer(many=True)
+    features = FeatureModelSerializer(many=True, read_only=True)
     # carimages = CarImage(many=True, read_only=True)
 
     class Meta:
@@ -46,7 +45,7 @@ class CarModelSerializer(ModelSerializer):
 
 
     def get_price(self, obj):
-        price = CarTariff.objects.filter(car=obj.id).first()
+        price = CarTariff.objects.filter(car=obj).first()
         return price.daily_price if price else None
 
 
@@ -64,7 +63,7 @@ class CarImageModelSerializer(ModelSerializer):
 
 class CarDetailModelSerializer(ModelSerializer):
     brand = CharField(source='brand.name')
-    price = CarTariffModelSerializer(many=True, source='price')
+    price = CarTariffModelSerializer(many=True, source='cartariff_set')
     features = FeatureModelSerializer(many=True)
     images = CarImageModelSerializer(many=True)
     similar_cars = SerializerMethodField()
@@ -88,7 +87,7 @@ class LongTermRentalModelSerializer(ModelSerializer):
 class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "phone", "first_name", "last_name"]
+        fields = ["id", "phone"]
 
 class VerifiedUserModelSerializer(ModelSerializer):
     user = HiddenField(default=CurrentUserDefault())
@@ -113,43 +112,82 @@ class RegisterModelSerializer(ModelSerializer):
 
 
 class SendSmsCodeSerializer(Serializer):
-    phone = CharField(help_text="User email or phone number for verification",
-                        label="Email or Phone",
-                        default='901001010')
-    code = IntegerField(default=100100)
+    phone = CharField(default='901001010')
 
-    def validate_phone(self, phone):
-        phone_data = find_contact_type(phone)
-        user = User.objects.filter(phone=phone)
-        if user:
-            raise ValidationError({'message': 'user already exist'})
-        return phone_data
+    def validate_phone(self, value):
+        digits = re.findall(r'\d', value)
+        if len(digits) < 9:
+            raise ValidationError('Phone number must be at least 9 digits')
+
+        phone = ''.join(digits)
+        return phone.removeprefix('998')
+
+    def validate(self, attrs):
+        phone = attrs['phone']
+        user, created = User.objects.get_or_create(phone=phone)
+        user.set_unusable_password()
+
+        return super().validate(attrs)
 
 
 class VerifySmsCodeSerializer(Serializer):
-    phone = CharField(help_text="User email or phone number for verification",
-                        label="Email or Phone",
-                        default='901001010')
+    phone = CharField(default='901001010')
     code = IntegerField(default=100100)
+    token_class = RefreshToken
 
-    def validate_contact(self, phone):
+    def validate_phone(self, value):
+        digits = re.findall(r'\d', value)
+        if len(digits) < 9:
+            raise ValidationError('Phone number must be at least 9 digits')
+        phone = ''.join(digits)
+        return phone.removeprefix('998')
+
+    def validate(self, attrs: dict[str, Any]):
+        phone_number = attrs['phone']
+
         try:
-            validate_email(phone)
-            return {'type': 'email', 'value': phone}
-        except DjangoValidationError:
-            pass
+            user_obj = User.objects.get(phone=phone_number)
 
-        return {'type': 'phone', 'value': normalize_phone(phone)}
+            authenticated_user = authenticate(phone=phone_number, request=self.context['request'])
+            if authenticated_user is not None:
+                self.user = authenticated_user
+            else:
+                if not user_obj.is_active:
+                    raise ValidationError("Foydalanuvchi faol emas. Ma'muriyatga murojaat qiling.")
+                self.user = user_obj
 
-    def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
-        is_valid, data = check_phone(**attrs)
-        if not is_valid:
-            raise ValidationError({'message': 'invalid or expired code'})
-        user, _ = User.objects.get_or_create(contact=attrs['phone']['value'],
-                                             code=make_password(data['code']))
+        except User.DoesNotExist:
+            try:
+                self.user = User.objects.create(phone=phone_number)
+            except Exception as e:
+                print(f"User yaratishda xato: {e}")
+                raise ValidationError(
+                    "Foydalanuvchini yaratishda kutilmagan xato yuz berdi. Iltimos, keyinroq urinib ko'ring.")
 
-        attrs['user'] = UserModelSerializer(user).data
+        if self.user is None or not self.user.is_active:
+            raise ValidationError("Foydalanuvchini topish, yaratish yoki faollikni tekshirishda xato yuz berdi.")
+
         return attrs
+
+    @property
+    def get_data(self):
+        refresh = self.get_token(self.user)
+        data = {
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh)
+        }
+        user_data = UserModelSerializer(self.user).data
+
+        return {
+            'message': 'OK.',
+            'data': {
+                **data, **{'user': user_data}
+            }
+        }
+
+    @classmethod
+    def get_token(cls, user) -> Token:
+        return cls.token_class.for_user(user)
 
 
 class LoginSerializer(Serializer):
@@ -163,16 +201,16 @@ class LoginSerializer(Serializer):
     }
 
     def validate_phone(self, phone):
-        return find_contact_type(phone)
+        phone = find_contact_type(phone)
+        return phone['value']
 
     def validate(self, attrs):
-        phone = attrs['phone']['value']
-        code = attrs['code']
+        phone = attrs['phone']
 
         try:
             self.user = User.objects.get(phone=phone)
         except User.DoesNotExist:
-            return ValidationError(self.default_error_messages)
+            raise ValidationError(self.default_error_messages)
 
         if not self.user.check_password(code):
             raise ValidationError({"datail": 'Incorrect password'})

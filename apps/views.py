@@ -1,11 +1,10 @@
-from random import randint
-
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView)
+                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView,
+                                     RetrieveDestroyAPIView)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,69 +23,84 @@ from apps.serializers import (BrandModelSerializer, CarModelSerializer,
                               NewModelSerializer, RegisterModelSerializer,
                               SendSmsCodeSerializer, VerifySmsCodeSerializer, LongTermRentalModelSerializer,
                               VerifiedUserModelSerializer)
-from apps.utils import send_code
+from apps.utils import send_code, random_code
 
 
 @extend_schema(tags=['Auth'])
 class SendCodeAPIView(APIView):
     serializer_class = SendSmsCodeSerializer
+    authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = SendSmsCodeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = request.data | serializer.validated_data['phone']
-        valid, _ttl = send_code(data)
+        phone = serializer.validated_data.get("phone")
+        if not phone:
+            return Response({"detail": "Telefon raqami kerak!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        code = random_code()
+        valid, _ttl = send_code(phone, code)
+
         if valid:
-            return Response({"message": "send sms code"})
-        return Response({'message':f'You have {_ttl} second left'})
+            return Response({"detail": "SMS yuborildi!"})
+
+        return Response(
+            {"detail": f"Yana {int(_ttl)} soniyadan keyin yuborishingiz mumkin."},
+            status=status.HTTP_429_TOO_MANY_REQUESTS
+        )
 
 
 @extend_schema(tags=['Auth'])
 class LoginAPIView(APIView):
-    serializer_class = LoginSerializer
+    serializer_class = VerifySmsCodeSerializer
+    authentication_classes = ()
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
 
-        return Response(serializer.get_data())
+        is_valid_code = send_code(**serializer.data)
+        if not is_valid_code:
+            return Response({"message": "invalid code"}, status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.get_data)
 
 
 @extend_schema(tags=['News'])
 class NewsListCreateAPIView(ListCreateAPIView):
     queryset = New.objects.all()
     serializer_class = NewModelSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    authentication_classes = ()
 
 
 @extend_schema(tags=['News'])
 class NewsModelViewSet(ModelViewSet):
     queryset = New.objects.all()
     serializer_class = NewModelSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    authentication_classes = ()
 
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-    permission_classes = [IsAuthenticated,  IsAdminOrReadOnly]
+    authentication_classes = ()
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryRetrieveAPIView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-    permission_classes = [IsAuthenticated,  IsAdminOrReadOnly]
+    authentication_classes = ()
     lookup_field = 'name'
 
 @extend_schema(tags=['Cars'])
-class CarModelViewSet(ModelViewSet):
+class CarListCreateAPIView(ListCreateAPIView):
     queryset = Car.objects.all()
     serializer_class = CarModelSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
     search_fields = ['name', 'brand']
-    permission_classes = [IsAdminOrReadOnly, ]
+    authentication_classes = ()
     pagination_class = CustomCursorPagination
 
     def get_queryset(self):
@@ -97,21 +111,21 @@ class CarModelViewSet(ModelViewSet):
 class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Car.objects.all()
     serializer_class = CarModelSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    authentication_classes = ()
 
 
 @extend_schema(tags=['Brand & Category'])
 class BrandListCreateAPIView(ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
+    authentication_classes = ()
 
 
 @extend_schema(tags=['Brand & Category'])
 class BrandRetrieveAPIView(RetrieveAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
-    permission_classes = [IsAuthenticated,  IsAdminOrReadOnly]
+    authentication_classes = ()
     lookup_field = 'name'
 
 
@@ -121,33 +135,24 @@ class UserProfileCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class AuthListAPIView(ListAPIView):
-    def register(self, request):
-        serializer = RegisterModelSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({"message": "User registered", "user_id": user.id}, status=status.HTTP_201_CREATED)
-
-    def login(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response({"message": "Login successful", "token": "jwt-token-here"})
-
-
 @extend_schema(tags=['Auth'])
 class VerifyCodeAPIView(APIView):
     serializer_class = VerifySmsCodeSerializer
+    authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        validate_data = serializer.validated_data
 
-        return Response({"message":"successfully registered","data":validate_data}, status=status.HTTP_201_CREATED)
+        is_valid_code = send_code(**serializer.data)
+        if not is_valid_code:
+            return Response({"message": "invalid code"}, status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.get_data)
 
 
 @extend_schema(tags=['Rentals'])
-class LongTermRentalRetrieveAPIView(RetrieveAPIView, DestroyAPIView):
+class LongTermRentalRetrieveAPIView(RetrieveDestroyAPIView):
     queryset = LongTermRental.objects.all()
     serializer_class = LongTermRentalModelSerializer
     permission_classes = [IsAuthenticated, IsRegisteredUser]
