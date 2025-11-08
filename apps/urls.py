@@ -1,8 +1,9 @@
 from django.urls import path
-from apps.views import (BrandListCreateAPIView, CarListCreateAPIView,
+from apps.views import (BrandListCreateAPIView,
                         CategoryListCreateAPIView, LoginAPIView,
                         NewsListCreateAPIView, SendCodeAPIView, CarRetrieveUpdateDestroyAPIView, VerifyCodeAPIView,
-                        LongTermRentalHistoryListAPIView, UserProfileCreateAPIView)
+                        LongTermRentalHistoryListAPIView, UserProfileCreateAPIView, CarModelViewSet,
+                        LongTermRentalListCreateAPIView)
 
 urlpatterns = [
     path('auth/send-code', SendCodeAPIView.as_view(), name='send_code'),
@@ -11,7 +12,7 @@ urlpatterns = [
     # path('user/register', UserProfileCreateAPIView.as_view(), name='user_profile'),
     path('news', NewsListCreateAPIView.as_view(), name='new-list'),
     path('categories', CategoryListCreateAPIView.as_view(), name='category-list'),
-    path('cars', CarListCreateAPIView.as_view(), name='car_model'),
+    path('user/rentals', LongTermRentalListCreateAPIView.as_view(), name='rent_car'),
     path('cars/<uuid:uuid>', CarRetrieveUpdateDestroyAPIView.as_view(), name='car_detail'),
     path('rentals/history', LongTermRentalHistoryListAPIView.as_view(), name='rents_history'),
     path('brands', BrandListCreateAPIView.as_view(), name='brand-list'),

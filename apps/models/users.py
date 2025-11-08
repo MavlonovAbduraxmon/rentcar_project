@@ -1,7 +1,10 @@
 import re
+
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
+from django.db.models import (CharField, BigIntegerField, TextChoices, CASCADE, OneToOneField, DateField)
 from rest_framework.exceptions import ValidationError
-from django.db.models import (CharField, BigIntegerField, TextChoices, CASCADE, OneToOneField, DateField, TextField)
+
 from apps.models.base import UUIDBaseModel
 from apps.models.managers import CustomUserManager
 
@@ -11,13 +14,8 @@ class User(AbstractUser, UUIDBaseModel):
         ADMIN = 'admin', 'Admin',
         USER = 'user', 'User'
 
-    type = CharField(
-        max_length=20,
-        choices=Type.choices,
-        default=Type.USER
-    )
-
     phone = CharField(max_length=13, unique=True, default="+998")
+    type= CharField(max_length=15, choices=Type.choices, default=Type.USER)
     email = None
     username = None
     objects = CustomUserManager()
@@ -33,7 +31,14 @@ class User(AbstractUser, UUIDBaseModel):
         self.phone = phone.removeprefix('998')
 
     def save(self, *, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.check_phone()
+        if self.is_superuser:
+            self.role = self.Type.ADMIN
+
+        if self.pk:
+            old = User.objects.filter(pk=self.pk).first()
+            if old and self.password != old.password:
+                self.password = make_password(self.password)
+
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
 
@@ -44,7 +49,23 @@ class AdminProfile(UUIDBaseModel):
 
 
 class UserProfile(UUIDBaseModel):
-    user = OneToOneField('apps.User', CASCADE)
-    birth_date = DateField()
-    address = TextField()
-    region = CharField(max_length=255)
+    user = OneToOneField('apps.User', CASCADE, related_name='profile')
+    first_name = CharField(max_length=255)
+    last_name = CharField(max_length=255)
+    data_of_birth = DateField()
+    driver_licence_date_of_issue = DateField()
+    id_card_number = CharField(max_length=9)
+    personal_number = CharField(max_length=14)
+    driver_licence_number = CharField(max_length=9)
+
+    class Meta:
+        verbose_name = 'Registered user'
+        verbose_name_plural = 'Registered users'
+
+    def save(self, *, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.user.is_registered = True
+        self.user.save(update_fields=['is_registered'])
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+    def __str__(self):
+        return self.first_name + " " + self.last_name

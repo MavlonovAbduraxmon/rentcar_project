@@ -1,4 +1,4 @@
-from rest_framework.pagination import PageNumberPagination, CursorPagination
+from rest_framework.pagination import CursorPagination
 from rest_framework.response import Response
 
 
