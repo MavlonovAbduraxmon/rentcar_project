@@ -12,7 +12,7 @@ https://rentcar.uz/
 8+. verify-code da codeni ham yuborish
 9.+categories.json
   +python3 manage.py loaddata categories
-10. response ni dataga o'rash kerak
+10. + response ni dataga o'rash kerak
 {
   "message": "Valid Code",
   "access token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyNDA2NTkwLCJpYXQiOjE3NjE4MDE3OTAsImp0aSI6Ijc2NDRmYWJkMTY4YzQ2MGZhYWNiMjg2YTE0YTg5YmI0IiwidXNlcl9pZCI6ImNkYWEyZmRmLTQ2ZjQtNGFhNi04OGZmLWE5MzgwY2EzMTA5MyJ9.ii791_L6IA9azRD26Q6JPbN6zZJHLTTLWVYsx_-5RNM",
@@ -32,7 +32,7 @@ https://rentcar.uz/
 }
 
 
-11. sms code yuborishda, qayta qayta yubormaslik kerak
+11. + sms code yuborishda, qayta qayta yubormaslik kerak
 901001010 -> sms code (1 minute)
 confirm-code -> phone save db
 You have 114 seconds left
@@ -40,7 +40,7 @@ You have 114 seconds left
 
 12+. swaggerda qulfchalarni togrilash
 
-13.
+13. malumot qoshishda admin bolishi kerak
 
 
 
