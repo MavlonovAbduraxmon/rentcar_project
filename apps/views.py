@@ -1,38 +1,37 @@
+from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView, CreateAPIView, DestroyAPIView,
+                                     RetrieveUpdateDestroyAPIView, RetrieveAPIView, CreateAPIView,
                                      RetrieveDestroyAPIView)
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from django.core.exceptions import ValidationError
 from apps.filters import CarFilter
 from apps.models import LongTermRental, UserProfile
-
 from apps.models.cars import Brand, Car, Category
 from apps.models.news import New
 from apps.paginations import CustomCursorPagination
-from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser
+from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser, ReadAnyCreateAdminMixin
 from apps.serializers import (BrandModelSerializer, CarModelSerializer,
-                              CategoryModelSerializer, LoginSerializer,
-                              NewModelSerializer, RegisterModelSerializer,
-                              SendSmsCodeSerializer, VerifySmsCodeSerializer, LongTermRentalModelSerializer,
+                              CategoryModelSerializer, NewModelSerializer, SendSmsCodeSerializer,
+                              VerifySmsCodeSerializer, LongTermRentalModelSerializer,
                               VerifiedUserModelSerializer)
 from apps.utils import send_code, random_code
 
 
-@extend_schema(tags=['Auth'])
+@extend_schema(tags=['Auth'], summary="admin")
 class SendCodeAPIView(APIView):
     serializer_class = SendSmsCodeSerializer
     authentication_classes = ()
 
     def post(self, request, *args, **kwargs):
-        serializer = SendSmsCodeSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone = serializer.validated_data.get("phone")
         if not phone:
@@ -84,7 +83,7 @@ class NewsModelViewSet(ModelViewSet):
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-    authentication_classes = ()
+
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryRetrieveAPIView(RetrieveAPIView):
@@ -93,18 +92,16 @@ class CategoryRetrieveAPIView(RetrieveAPIView):
     authentication_classes = ()
     lookup_field = 'name'
 
+
 @extend_schema(tags=['Cars'])
-class CarListCreateAPIView(ListCreateAPIView):
-    queryset = Car.objects.all()
+class CarListCreateAPIView(ListCreateAPIView, ReadAnyCreateAdminMixin):
+    queryset = Car.objects.filter(is_available=True)
     serializer_class = CarModelSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
     search_fields = ['name', 'brand']
-    authentication_classes = ()
-    pagination_class = CustomCursorPagination
-
-    def get_queryset(self):
-        return super().get_queryset().filter(is_available=True)
+    authentication_classes = [JWTAuthentication]
+    # pagination_class = CustomCursorPagination
 
 
 @extend_schema(tags=['Cars'])
@@ -118,7 +115,6 @@ class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 class BrandListCreateAPIView(ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
-    authentication_classes = ()
 
 
 @extend_schema(tags=['Brand & Category'])

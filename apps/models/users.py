@@ -15,13 +15,17 @@ class User(AbstractUser, UUIDBaseModel):
         USER = 'user', 'User'
 
     phone = CharField(max_length=13, unique=True, default="+998")
-    type= CharField(max_length=15, choices=Type.choices, default=Type.USER)
+    type = CharField(max_length=15, choices=Type.choices, default=Type.USER)
     email = None
     username = None
     objects = CustomUserManager()
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'phone'
+
+    @property
+    def is_admin(self):
+        return self.type == self.Type.ADMIN
 
     def check_phone(self):
         digits = re.findall(r'\d', self.phone)

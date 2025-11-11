@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import validate_email
 from redis import Redis
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import AllowAny, IsAdminUser
+
 
 def random_code():
     return randint(100_000, 999_999)
@@ -54,4 +56,3 @@ def find_contact_type(phone):
         return {'type': 'email', 'value': phone}
     except ValidationError:
         pass
-

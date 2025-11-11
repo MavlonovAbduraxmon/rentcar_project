@@ -9,4 +9,14 @@ class IsAdminOrReadOnly(BasePermission):
 
 class IsRegisteredUser(BasePermission):
     def has_permission(self, request, view):
-        return request.user.is_registered
+        if request.user.is_admin:
+            return request.user.is_authenticated
+
+# utils/permissions.py
+from rest_framework.permissions import AllowAny, IsAdminUser
+
+class ReadAnyCreateAdminMixin:
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAdminUser()]
