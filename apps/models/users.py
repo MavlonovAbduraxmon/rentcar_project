@@ -25,7 +25,7 @@ class User(AbstractUser, UUIDBaseModel):
 
     @property
     def is_admin(self):
-        return self.type == self.Type.ADMIN
+        return self.type == self.Type.ADMIN or self.is_superuser
 
     def check_phone(self):
         digits = re.findall(r'\d', self.phone)

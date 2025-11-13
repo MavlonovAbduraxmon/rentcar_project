@@ -195,7 +195,6 @@ class AdminProxyModelAdmin(UserAdminMixin):
 
 
 
-
 def get_app_list(self, request, app_label=None):
     app_dict = self._build_app_dict(request)
 
