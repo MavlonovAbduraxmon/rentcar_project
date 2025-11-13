@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
@@ -16,7 +16,7 @@ from apps.models import LongTermRental, UserProfile
 from apps.models.cars import Brand, Car, Category
 from apps.models.news import New
 from apps.paginations import CustomCursorPagination
-from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser
+from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser, IsAdminUser
 from apps.serializers import (BrandModelSerializer, CarModelSerializer,
                               CategoryModelSerializer, NewModelSerializer, SendSmsCodeSerializer,
                               VerifySmsCodeSerializer, LongTermRentalModelSerializer,
@@ -78,11 +78,19 @@ class NewsModelViewSet(ModelViewSet):
     authentication_classes = ()
 
 
+@extend_schema_view(
+    get=extend_schema(auth=[], description="List all categories (no token required)"),
+    post=extend_schema(description="Create a new category (admin only)", summary="Admin"),
+)
 @extend_schema(tags=['Brand & Category'])
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-    authentication_classes = ()
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            self.permission_classes = [IsAdminUser]
+        return super().get_permissions()
 
 
 @extend_schema(tags=['Brand & Category'])
