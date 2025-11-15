@@ -82,7 +82,11 @@ class NewsListCreateAPIView(ListCreateAPIView):
 class NewsModelViewSet(ModelViewSet):
     queryset = New.objects.all()
     serializer_class = NewModelSerializer
-    authentication_classes = ()
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return []
+        return [IsAuthenticated(), IsAdminUser()]
 
 
 @extend_schema_view(
