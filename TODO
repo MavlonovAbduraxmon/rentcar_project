@@ -8,9 +8,9 @@ https://rentcar.uz/
 4+. filter (category boyicha, brand boyicha, min_price, max_price [electro, hybrid, gas])
 5+. search (car name boyicha)
 6+. category, brand malumotlarini fixtures qilib yozib qoyish
-7. kirilchani qoshish
+7+. kirilchani qoshish
 8+. verify-code da codeni ham yuborish
-9.+categories.json
+9+. categories.json
   +python3 manage.py loaddata categories
 10. + response ni dataga o'rash kerak
 {

@@ -112,13 +112,29 @@ LANGUAGE_CODE = 'en'
 
 LANGUAGES = [
     ('en', 'English'),
-    ('uz', 'Russian'),
+    ('ru', 'Russian'),
+    ('uz', "O'zbek"),  # O'zbek tili, lotin yozuvi
+    ('oz', "Ўзбек"),  # O'zbek tili kiril yozuvi
     ('zh-hant', 'Chinese')
 ]
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
+
+EXTRA_LANG_INFO = {
+    'oz': {
+        'bidi': False,  # right-to-left
+        'code': 'oz',
+        'name': "Ozbek (Kiril)",
+        'name_local': "Ўзбек (кирил)",
+    }
+}
+
+# Add custom languages not provided by Django
+import django.conf.locale
+
+django.conf.locale.LANG_INFO |= EXTRA_LANG_INFO
 
 TIME_ZONE = 'Asia/Tashkent'
 
