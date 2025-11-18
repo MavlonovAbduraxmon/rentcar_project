@@ -11,6 +11,7 @@ class User(AbstractUser, UUIDBaseModel):
     class Type(TextChoices):
         ADMIN = 'admin', 'Admin',
         USER = 'user', 'User'
+        MANAGER = 'manager', 'Manager'
 
     phone = CharField(max_length=13, unique=True, default="+998")
     type = CharField(max_length=15, choices=Type.choices, default=Type.USER)
@@ -21,6 +22,10 @@ class User(AbstractUser, UUIDBaseModel):
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'phone'
+
+    class Meta:
+        verbose_name = 'Verified user'
+        verbose_name_plural = 'Verified users'
 
     @property
     def is_admin(self):

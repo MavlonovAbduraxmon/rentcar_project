@@ -5,8 +5,8 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import (ListAPIView, ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView, RetrieveAPIView, CreateAPIView,
-                                     RetrieveDestroyAPIView)
-from rest_framework.permissions import IsAuthenticated
+                                     RetrieveDestroyAPIView, UpdateAPIView, DestroyAPIView)
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -15,7 +15,7 @@ from apps.models import LongTermRental, UserProfile
 from apps.models.cars import Brand, Car, Category
 from apps.models.news import New
 from apps.paginations import CustomPageNumberPagination
-from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser, IsAdminUser
+from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser, IsAdminUser, AllowAny
 from apps.serializers import (BrandModelSerializer, CarModelSerializer,
                               CategoryModelSerializer, NewModelSerializer, SendSmsCodeSerializer,
                               VerifySmsCodeSerializer, LongTermRentalModelSerializer,
@@ -71,22 +71,7 @@ class LoginAPIView(APIView):
 class NewsListCreateAPIView(ListCreateAPIView):
     queryset = New.objects.all()
     serializer_class = NewModelSerializer
-
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            self.permission_classes = [IsAdminUser]
-        return super().get_permissions()
-
-
-@extend_schema(tags=['News'])
-class NewsModelViewSet(ModelViewSet):
-    queryset = New.objects.all()
-    serializer_class = NewModelSerializer
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return []
-        return [IsAuthenticated(), IsAdminUser()]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 @extend_schema_view(
@@ -97,18 +82,14 @@ class NewsModelViewSet(ModelViewSet):
 class CategoryListCreateAPIView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            self.permission_classes = [IsAdminUser]
-        return super().get_permissions()
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
 
 
 @extend_schema(tags=['Brand & Category'])
 class CategoryRetrieveAPIView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-    authentication_classes = ()
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
     lookup_field = 'name'
 
 
@@ -123,11 +104,11 @@ class CarListCreateAPIView(ListCreateAPIView):
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
     search_fields = ['name', 'brand']
+    permission_classes = [IsAdminOrReadOnly, ]
     pagination_class = CustomPageNumberPagination
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -135,11 +116,6 @@ class CarListCreateAPIView(ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return []
-        return [IsAuthenticated(), IsAdminUser]
 
 @extend_schema_view(
     get=extend_schema(description="Create a new category (admin only)", summary="Admin"),
@@ -157,28 +133,43 @@ class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
             return []
         return [IsAuthenticated(), IsAdminUser()]
 
-
-@extend_schema_view(
-    get=extend_schema(auth=[], description="List all categories (no token required)"),
-    post=extend_schema(description="Create a new category (admin only)", summary="Admin"),
-)
-@extend_schema(tags=['Brand & Category'])
+@extend_schema_view(get=extend_schema(auth=[]))
+@extend_schema(tags=['Car Brand & Categories'])
 class BrandListCreateAPIView(ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
-
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            self.permission_classes = [IsAdminUser]
-        return super().get_permissions()
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
 
 
-@extend_schema(tags=['Brand & Category'])
-class BrandRetrieveAPIView(RetrieveAPIView):
+@extend_schema(tags=['Car Brand & Categories'])
+class BrandUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
-    authentication_classes = ()
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
     lookup_field = 'name'
+
+
+# @extend_schema_view(
+#     get=extend_schema(auth=[], description="List all categories (no token required)"),
+#     post=extend_schema(description="Create a new category (admin only)", summary="Admin"),
+# )
+# @extend_schema(tags=['Brand & Category'])
+# class BrandListCreateAPIView(ListCreateAPIView):
+#     queryset = Brand.objects.all()
+#     serializer_class = BrandModelSerializer
+#
+#     def get_permissions(self):
+#         if self.request.method == 'POST':
+#             return [IsAdminUser()]
+#         return []
+#
+#
+# @extend_schema(tags=['Brand & Category'])
+# class BrandRetrieveAPIView(RetrieveAPIView):
+#     queryset = Brand.objects.all()
+#     serializer_class = BrandModelSerializer
+#     authentication_classes = ()
+#     lookup_field = 'name'
 
 
 class UserProfileCreateAPIView(CreateAPIView):
@@ -207,7 +198,7 @@ class VerifyCodeAPIView(APIView):
 class LongTermRentalRetrieveAPIView(RetrieveDestroyAPIView):
     queryset = LongTermRental.objects.all()
     serializer_class = LongTermRentalModelSerializer
-    permission_classes = [IsAuthenticated, IsRegisteredUser]
+    permission_classes = [IsRegisteredUser, IsAdminOrReadOnly]
 
 
 @extend_schema_view(
@@ -218,40 +209,21 @@ class LongTermRentalRetrieveAPIView(RetrieveDestroyAPIView):
 class LongTermRentalListCreateAPIView(ListCreateAPIView):
     queryset = LongTermRental.objects.all()
     serializer_class = LongTermRentalModelSerializer
-
-    def get_permissions(self):
-        self.permission_classes = [IsAdminUser]
-        return super().get_permissions()
-
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        if hasattr(self.request.user, 'profile'):
-            return super().get_queryset().filter(user=self.request.user.profile)
-        return LongTermRental.objects.none()
-        # return super().get_queryset().filter(user=self.request.user)
+        return super().get_queryset().filter(user=self.request.user)
 
     def perform_create(self, serializer):
         try:
             profile = UserProfile.objects.get(user=self.request.user)
-            serializer.save(user=profile)
         except UserProfile.DoesNotExist:
-            raise ValidationError({"detail": "UserProfile is missing. Please complete profile first."})
-
-        # try:
-        #     profile = UserProfile.objects.get(user=self.request.user)
-        # except UserProfile.DoesNotExist:
-        #     return ValidationError({"detail": "UserProfile is missing. Please complete profile first."})
-        #
-        # serializer.save(user=profile)
-
-    # def get_permissions(self):
-    #     if self.request.method == 'POST':
-    #         self.permission_classes = [IsAdminUser]
-    #     return super().get_permissions()
+            profile = UserProfile.objects.create(user=self.request.user)
+        serializer.save(user=profile)
 
 
 @extend_schema(tags=['Rentals'])
 class LongTermRentalHistoryListAPIView(ListAPIView):
     queryset = LongTermRental.objects.all()
     serializer_class = LongTermRentalModelSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsRegisteredUser, IsAdminOrReadOnly]

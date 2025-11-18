@@ -4,6 +4,7 @@ from typing import Any
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField, SerializerMethodField, HiddenField, CurrentUserDefault
+from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer, CharField
 from rest_framework_simplejwt.tokens import RefreshToken, Token
 from apps.models import New, Brand, Car, Category, User, CarTariff, Feature, CarImage, LongTermRental, UserProfile
@@ -21,6 +22,11 @@ class BrandModelSerializer(ModelSerializer):
         model = Brand
         fields = ["id", "name", "logo"]
 
+    def validate_name(self, value):
+        if self.instance is None:
+            if Brand.objects.filter(name__iexact=value).exists():
+                raise ValidationError("Bu brand allaqachon mavjud!")
+        return value
 
 class FeatureModelSerializer(ModelSerializer):
     class Meta:
@@ -35,17 +41,17 @@ class NewModelSerializer(ModelSerializer):
 
 
 class CarModelSerializer(ModelSerializer):
-    price = SerializerMethodField()
+    daily_price = SerializerMethodField()
     features = FeatureModelSerializer(many=True, read_only=True)
-    # carimages = CarImage(many=True, read_only=True)
+    brand_id = PrimaryKeyRelatedField(queryset=Brand.objects.all(), source='brand', write_only=True)
 
     class Meta:
         model = Car
-        fields = ['id', "name", 'price', 'deposit', 'limit_day', 'features']
+        fields = ['id', 'name', 'brand_id', 'daily_price', 'deposit', 'limit_day', 'features', 'color_id']
 
 
-    def get_price(self, obj):
-        price = CarTariff.objects.filter(car=obj).first()
+    def get_daily_price(self, obj) -> int:
+        price = CarTariff.objects.filter(car=obj.id).first()
         return price.daily_price if price else None
 
 

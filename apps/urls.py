@@ -1,7 +1,8 @@
 from django.urls import path
+
 from apps.views import (BrandListCreateAPIView,
-                        CategoryListCreateAPIView, LoginAPIView,
-                        NewsListCreateAPIView, SendCodeAPIView, CarRetrieveUpdateDestroyAPIView, VerifyCodeAPIView,
+                        CategoryListCreateAPIView, NewsListCreateAPIView, SendCodeAPIView,
+                        CarRetrieveUpdateDestroyAPIView, VerifyCodeAPIView,
                         LongTermRentalHistoryListAPIView, LongTermRentalListCreateAPIView, CarListCreateAPIView)
 
 urlpatterns = [
