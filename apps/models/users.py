@@ -58,8 +58,10 @@ class AdminProfile(UUIDBaseModel):
 
 class UserProfile(UUIDBaseModel):
     user = OneToOneField('apps.User', CASCADE, related_name='profile')
-    data_of_birth = DateField()
-    driver_licence_date_of_issue = DateField()
+    first_name = CharField(max_length=155, blank=True, default='')
+    last_name = CharField(max_length=155, blank=True, default='')
+    data_of_birth = DateField(null=True, blank=True)
+    driver_licence_date_of_issue = DateField(null=True, blank=True)
     id_card_number = CharField(max_length=9)
     personal_number = CharField(max_length=14)
     driver_licence_number = CharField(max_length=9)
@@ -74,4 +76,4 @@ class UserProfile(UUIDBaseModel):
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return f"{self.user.phone} - {self.first_name} {self.last_name}"

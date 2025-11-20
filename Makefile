@@ -9,4 +9,4 @@ compile_msg:
 	python3 manage.py compilemessages -i .venv
 
 loaddata:
-	python3 manage.py loaddata categories brands faq features
+	python3 manage.py loaddata categories brands faq features cars cartariff color

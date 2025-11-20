@@ -23,7 +23,7 @@ from apps.serializers import (BrandModelSerializer, CarModelSerializer,
 from apps.utils import send_code, random_code
 
 
-@extend_schema(tags=['Auth'], summary="Admin")
+@extend_schema(tags=['Auth'])
 class SendCodeAPIView(APIView):
     serializer_class = SendSmsCodeSerializer
     authentication_classes = ()
@@ -118,7 +118,6 @@ class CarListCreateAPIView(ListCreateAPIView):
         return Response(serializer.data)
 
 @extend_schema_view(
-    get=extend_schema(description="Create a new category (admin only)", summary="Admin"),
     put=extend_schema(description="Create a new category (admin only)", summary="Admin"),
     patch=extend_schema(description="Create a new category (admin only)", summary="Admin"),
     delete=extend_schema(description="Create a new category (admin only)", summary="Admin"),
@@ -133,12 +132,18 @@ class CarRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
             return []
         return [IsAuthenticated(), IsAdminUser()]
 
+
+@extend_schema_view(
+    get=extend_schema(auth=[], description="List all categories (no token required)"),
+    post=extend_schema(description="Create a new category (admin only)", summary="Admin"),
+)
 @extend_schema_view(get=extend_schema(auth=[]))
 @extend_schema(tags=['Car Brand & Categories'])
 class BrandListCreateAPIView(ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
+
 
 
 @extend_schema(tags=['Car Brand & Categories'])
@@ -203,7 +208,6 @@ class LongTermRentalRetrieveAPIView(RetrieveDestroyAPIView):
 
 @extend_schema_view(
     get=extend_schema(description="Create a new category (admin only)", summary="Admin"),
-    post=extend_schema(description="Create a new category (admin only)", summary="Admin"),
 )
 @extend_schema(tags=['Rentals'])
 class LongTermRentalListCreateAPIView(ListCreateAPIView):
@@ -214,12 +218,27 @@ class LongTermRentalListCreateAPIView(ListCreateAPIView):
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
+
     def perform_create(self, serializer):
         try:
             profile = UserProfile.objects.get(user=self.request.user)
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(user=self.request.user)
+            profile = UserProfile.objects.create(
+                user=self.request.user,
+                first_name=getattr(self.request.user, 'first_name', ''),
+                last_name=getattr(self.request.user, 'last_name', ''),
+                data_of_birth=None,
+                driver_licence_date_of_issue=None,
+                passport_series=''
+            )
         serializer.save(user=profile)
+
+    # def perform_create(self, serializer):
+    #     try:
+    #         profile = UserProfile.objects.get(user=self.request.user)
+    #     except UserProfile.DoesNotExist:
+    #         profile = UserProfile.objects.create(user=self.request.user)
+    #     serializer.save(user=profile)
 
 
 @extend_schema(tags=['Rentals'])

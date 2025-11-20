@@ -1,6 +1,6 @@
 [
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "8e3a2f94-bf3f-4cc0-b56f-2a3c7fd4b1a2",
     "fields": {
       "name": "CHEVROLET",
@@ -8,7 +8,7 @@
     }
   },
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "4a1b8f70-67b1-4b11-9e9b-0a8bdb76e22b",
     "fields": {
       "name": "ISUZU",
@@ -16,7 +16,7 @@
     }
   },
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "9d9a5f47-61cb-4e79-9b17-4c2c528a5b93",
     "fields": {
       "name": "KIA",
@@ -24,7 +24,7 @@
     }
   },
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "b34cfb5e-b68d-4a8c-a5d7-28a5a0a9cf6a",
     "fields": {
       "name": "HYUNDAI",
@@ -32,7 +32,7 @@
     }
   },
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "2a6b3b2a-7c9f-4a35-b6c5-ff25bc3c47af",
     "fields": {
       "name": "TOYOTA",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "c5ef82a8-9a9c-4f3f-b6ef-8b2c2df7b94c",
     "fields": {
       "name": "BYD",
@@ -48,11 +48,19 @@
     }
   },
   {
-    "model": "apps.Brand",
+    "model": "apps.brand",
     "pk": "1e8b7a5b-3e1f-4b7f-bc9c-fcf4d4326e23",
     "fields": {
       "name": "LIXIANG",
       "logo": "brand_logos/lixiang.png"
+    }
+  },
+  {
+    "model": "apps.brand",
+    "pk": "dfdd10c2-f331-4396-9a3e-ad76bedf9cf0",
+    "fields": {
+      "name": "MERCEDES-BENZ",
+      "logo": "brand_logos/mercedes.png"
     }
   }
 ]

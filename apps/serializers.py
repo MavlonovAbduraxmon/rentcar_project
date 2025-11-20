@@ -89,7 +89,36 @@ class LongTermRentalModelSerializer(ModelSerializer):
         model = LongTermRental
         exclude = ['user']
 
+    def validate_car(self, value):
+        """Car mavjudligini va available ekanligini tekshirish"""
+        if not value.is_available:
+            raise ValidationError(
+                f"Mashina '{value.name}' hozirda mavjud emas"
+            )
+        return value
 
+    def validate(self, attrs):
+        """Pick-up va drop-off sanalarini tekshirish"""
+        from datetime import datetime
+
+        pick_up = attrs.get('pick_up_data_time')
+        drop_of = attrs.get('drop_of_data_time')
+
+        # Sana tekshiruvi
+        if pick_up and drop_of:
+            if drop_of <= pick_up:
+                raise ValidationError({
+                    'drop_of_data_time': 'Drop-off vaqti pick-up vaqtidan kechroq bo\'lishi kerak'
+                })
+
+            # O'tmishga rental qilishni oldini olish
+            now = datetime.now(pick_up.tzinfo)
+            if pick_up < now:
+                raise ValidationError({
+                    'pick_up_data_time': 'Pick-up vaqti kelajakda bo\'lishi kerak'
+                })
+
+        return attrs
 class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User

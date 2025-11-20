@@ -1,6 +1,6 @@
 [
-  {
-    "model": "apps.FAQ",
+ {
+    "model": "apps.faq",
     "pk": "e1c3b8c7-75a2-4b8a-ae12-f4f8c4206f31",
     "fields": {
       "question": "What documents are required to rent a car in Uzbekistan?",
@@ -10,7 +10,7 @@
     }
   },
   {
-    "model": "apps.FAQ",
+    "model": "apps.faq",
     "pk": "9b4ef3b9-2d79-4b13-9cb5-4764a3dfd6d9",
     "fields": {
       "question": "Is it possible to rent a car without a deposit?",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "model": "apps.FAQ",
+    "model": "apps.faq",
     "pk": "e9e36e32-b9f3-46d8-b08a-8a7f0a41f7db",
     "fields": {
       "question": "When will the deposit be refunded?",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "model": "apps.FAQ",
+    "model": "apps.faq",
     "pk": "1d63b62f-b58c-46b7-bf42-7d8a60d06c83",
     "fields": {
       "question": "How does insurance work?",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "model": "apps.FAQ",
+    "model": "apps.faq",
     "pk": "b5dcfe2f-bdd1-45b5-a8c3-4a390d6b55c0",
     "fields": {
       "question": "What should I do in case of a traffic accident?",
@@ -50,7 +50,7 @@
     }
   },
   {
-    "model": "apps.FAQ",
+    "model": "apps.faq",
     "pk": "a2c6a312-d38f-4f2b-954d-18c0c0df5e22",
     "fields": {
       "question": "What is the daily mileage limit?",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "model": "apps.FAQ",
+    "model": "apps.faq",
     "pk": "caa7e8dc-baf0-4a97-b71d-567be2b0cfad",
     "fields": {
       "question": "How much is airport delivery/pick-up?",
