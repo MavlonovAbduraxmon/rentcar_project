@@ -1,10 +1,8 @@
 import re
-
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
-from django.db.models import (CharField, BigIntegerField, TextChoices, CASCADE, OneToOneField, DateField)
+from django.db.models import (CharField, BigIntegerField, TextChoices, CASCADE, OneToOneField, DateField, BooleanField)
 from rest_framework.exceptions import ValidationError
-
 from apps.models.base import UUIDBaseModel
 from apps.models.managers import CustomUserManager
 
@@ -13,15 +11,21 @@ class User(AbstractUser, UUIDBaseModel):
     class Type(TextChoices):
         ADMIN = 'admin', 'Admin',
         USER = 'user', 'User'
+        MANAGER = 'manager', 'Manager'
 
     phone = CharField(max_length=13, unique=True, default="+998")
     type = CharField(max_length=15, choices=Type.choices, default=Type.USER)
+    is_registered = BooleanField(default=False)
     email = None
     username = None
     objects = CustomUserManager()
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'phone'
+
+    class Meta:
+        verbose_name = 'Verified user'
+        verbose_name_plural = 'Verified users'
 
     @property
     def is_admin(self):
@@ -36,7 +40,7 @@ class User(AbstractUser, UUIDBaseModel):
 
     def save(self, *, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.is_superuser:
-            self.role = self.Type.ADMIN
+            self.type = self.Type.ADMIN
 
         if self.pk:
             old = User.objects.filter(pk=self.pk).first()
@@ -54,8 +58,6 @@ class AdminProfile(UUIDBaseModel):
 
 class UserProfile(UUIDBaseModel):
     user = OneToOneField('apps.User', CASCADE, related_name='profile')
-    first_name = CharField(max_length=255)
-    last_name = CharField(max_length=255)
     data_of_birth = DateField()
     driver_licence_date_of_issue = DateField()
     id_card_number = CharField(max_length=9)
