@@ -2,6 +2,8 @@ import re
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.db.models import (CharField, BigIntegerField, TextChoices, CASCADE, OneToOneField, DateField, BooleanField)
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from rest_framework.exceptions import ValidationError
 from apps.models.base import UUIDBaseModel
 from apps.models.managers import CustomUserManager
@@ -74,6 +76,11 @@ class UserProfile(UUIDBaseModel):
         self.user.is_registered = True
         self.user.save(update_fields=['is_registered'])
         super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            UserProfile.objects.create(user=instance)
 
     def __str__(self):
         return f"{self.user.phone} - {self.first_name} {self.last_name}"

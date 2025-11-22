@@ -1,12 +1,13 @@
 import code
 import re
 from typing import Any
+
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField, SerializerMethodField, HiddenField, CurrentUserDefault
-from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer, Serializer, CharField
 from rest_framework_simplejwt.tokens import RefreshToken, Token
+
 from apps.models import New, Brand, Car, Category, User, CarTariff, Feature, CarImage, LongTermRental, UserProfile
 from apps.utils import find_contact_type
 
@@ -15,7 +16,6 @@ class CategoryModelSerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "name", "image"]
-
 
 class BrandModelSerializer(ModelSerializer):
     class Meta:
@@ -33,21 +33,21 @@ class FeatureModelSerializer(ModelSerializer):
         model = Feature
         fields = ['name', 'description', 'icon']
 
-
 class NewModelSerializer(ModelSerializer):
     class Meta:
         model = New
         fields = ["id", "title", "image", "description", "created_at"]
 
-
 class CarModelSerializer(ModelSerializer):
     daily_price = SerializerMethodField()
     features = FeatureModelSerializer(many=True, read_only=True)
-    brand_id = PrimaryKeyRelatedField(queryset=Brand.objects.all(), source='brand', write_only=True)
+    brand = SerializerMethodField()
+    main_image = SerializerMethodField()
+
 
     class Meta:
         model = Car
-        fields = ['id', 'name', 'brand_id', 'daily_price', 'deposit', 'limit_day', 'features', 'color_id']
+        fields = ['id', 'name', 'brand', 'daily_price', 'deposit', 'limit_day', 'main_image', 'features', 'color_id']
 
 
     def get_daily_price(self, obj) -> int:
@@ -55,17 +55,26 @@ class CarModelSerializer(ModelSerializer):
         return price.daily_price if price else None
 
 
+    def get_brand(self, obj) -> dict:
+        return {
+            'id': str(obj.brand.id),
+            'name': obj.brand.name,
+            'logo': obj.brand.logo.url if obj.brand.logo else None
+        }
+
+
+    def get_main_image(self, obj) -> str:
+        return obj.main_photo.url if obj.main_photo else None
+
 class CarTariffModelSerializer(ModelSerializer):
     class Meta:
         model = CarTariff
         exclude = ['id', 'car', 'created_at', 'updated_at']
 
-
 class CarImageModelSerializer(ModelSerializer):
     class Meta:
         model = CarImage
         fields = ['image']
-
 
 class CarDetailModelSerializer(ModelSerializer):
     brand = CharField(source='brand.name')
@@ -83,14 +92,12 @@ class CarDetailModelSerializer(ModelSerializer):
         similar = Car.objects.filter(category=obj.category).exclude(id=obj.id)[:4]
         return CarModelSerializer(similar, many=True).data
 
-
 class LongTermRentalModelSerializer(ModelSerializer):
     class Meta:
         model = LongTermRental
         exclude = ['user']
 
     def validate_car(self, value):
-        """Car mavjudligini va available ekanligini tekshirish"""
         if not value.is_available:
             raise ValidationError(
                 f"Mashina '{value.name}' hozirda mavjud emas"
@@ -98,20 +105,17 @@ class LongTermRentalModelSerializer(ModelSerializer):
         return value
 
     def validate(self, attrs):
-        """Pick-up va drop-off sanalarini tekshirish"""
         from datetime import datetime
 
         pick_up = attrs.get('pick_up_data_time')
         drop_of = attrs.get('drop_of_data_time')
 
-        # Sana tekshiruvi
         if pick_up and drop_of:
             if drop_of <= pick_up:
                 raise ValidationError({
                     'drop_of_data_time': 'Drop-off vaqti pick-up vaqtidan kechroq bo\'lishi kerak'
                 })
 
-            # O'tmishga rental qilishni oldini olish
             now = datetime.now(pick_up.tzinfo)
             if pick_up < now:
                 raise ValidationError({
@@ -119,10 +123,11 @@ class LongTermRentalModelSerializer(ModelSerializer):
                 })
 
         return attrs
+
 class UserModelSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "phone"]
+        fields = ["id", "phone", "first_name", "last_name"]
 
 class VerifiedUserModelSerializer(ModelSerializer):
     user = HiddenField(default=CurrentUserDefault())
@@ -131,7 +136,6 @@ class VerifiedUserModelSerializer(ModelSerializer):
         model = UserProfile
         exclude = ()
 
-
 class RegisterModelSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -139,12 +143,23 @@ class RegisterModelSerializer(ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
+        # User yaratish
         user = User.objects.create_user(
             phone=validated_data["phone"],
             password=validated_data["password"]
         )
-        return user
 
+        # UserProfile yaratish (get_or_create xavfsizroq)
+        UserProfile.objects.get_or_create(
+            user=user,
+            defaults={
+                'first_name': '',
+                'last_name': '',
+                'passport_series': ''
+            }
+        )
+
+        return user
 
 class SendSmsCodeSerializer(Serializer):
     phone = CharField(default='901001010')
@@ -163,7 +178,6 @@ class SendSmsCodeSerializer(Serializer):
         user.set_unusable_password()
 
         return super().validate(attrs)
-
 
 class VerifySmsCodeSerializer(Serializer):
     phone = CharField(default='901001010')
@@ -223,7 +237,6 @@ class VerifySmsCodeSerializer(Serializer):
     @classmethod
     def get_token(cls, user) -> Token:
         return cls.token_class.for_user(user)
-
 
 class LoginSerializer(Serializer):
     phone = CharField(max_length=255,default='901001010')

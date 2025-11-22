@@ -2,4 +2,4 @@ from apps.models.cars import (FAQ, Brand, Car, CarImage, Category, Feature, CarC
 from apps.models.news import New
 from apps.models.users import User, AdminProfile, UserProfile
 
-__all__ = ['User','Car', 'Category', 'Feature', 'Brand', 'CarImage', 'news', 'CarTariff', 'Feature','User', 'LongTermRental']
+__all__ = ['User','Car', 'Category', 'Feature', 'Brand', 'CarImage', 'news', 'CarTariff', 'Feature','UserProfile', 'LongTermRental']

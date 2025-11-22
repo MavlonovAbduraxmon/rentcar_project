@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from apps.filters import CarFilter
-from apps.models import LongTermRental, UserProfile
+from apps.models import LongTermRental, UserProfile, User
 from apps.models.cars import Brand, Car, Category
 from apps.models.news import New
 from apps.paginations import CustomPageNumberPagination
@@ -19,7 +19,7 @@ from apps.permissions import IsAdminOrReadOnly, IsRegisteredUser, IsAdminUser, A
 from apps.serializers import (BrandModelSerializer, CarModelSerializer,
                               CategoryModelSerializer, NewModelSerializer, SendSmsCodeSerializer,
                               VerifySmsCodeSerializer, LongTermRentalModelSerializer,
-                              VerifiedUserModelSerializer)
+                              VerifiedUserModelSerializer, RegisterModelSerializer)
 from apps.utils import send_code, random_code
 
 
@@ -48,19 +48,39 @@ class SendCodeAPIView(APIView):
 
 
 @extend_schema(tags=['Auth'])
-class LoginAPIView(APIView):
-    serializer_class = VerifySmsCodeSerializer
+class RegisterAPIView(CreateAPIView):
+    serializer_class = RegisterModelSerializer
     authentication_classes = ()
+    permission_classes = ()
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        if not hasattr(user, 'profile'):
+            UserProfile.objects.get_or_create(
+                user=user,
+                defaults={
+                    'first_name': request.data.get('first_name', ''),
+                    'last_name': request.data.get('last_name', ''),
+                    'passport_series': request.data.get('passport_series', ''),
+                }
+            )
 
-        is_valid_code = send_code(**serializer.data)
-        if not is_valid_code:
-            return Response({"message": "invalid code"}, status.HTTP_400_BAD_REQUEST)
+        from rest_framework_simplejwt.tokens import RefreshToken
+        refresh = RefreshToken.for_user(user)
 
-        return Response(serializer.get_data)
+        return Response({
+            'message': 'User registered successfully',
+            'data': {
+                'user': {
+                    'id': str(user.id),
+                    'phone': user.phone
+                },
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh)
+            }
+        }, status=status.HTTP_201_CREATED)
 
 
 @extend_schema_view(
@@ -103,7 +123,7 @@ class CarListCreateAPIView(ListCreateAPIView):
     serializer_class = CarModelSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = CarFilter
-    search_fields = ['name', 'brand']
+    search_fields = ['name', 'brand__name']
     permission_classes = [IsAdminOrReadOnly, ]
     pagination_class = CustomPageNumberPagination
 
@@ -116,6 +136,7 @@ class CarListCreateAPIView(ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 
 @extend_schema_view(
     put=extend_schema(description="Create a new category (admin only)", summary="Admin"),
@@ -145,7 +166,6 @@ class BrandListCreateAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
 
 
-
 @extend_schema(tags=['Car Brand & Categories'])
 class BrandUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
     queryset = Brand.objects.all()
@@ -154,29 +174,7 @@ class BrandUpdateDestroyAPIView(UpdateAPIView, DestroyAPIView):
     lookup_field = 'name'
 
 
-# @extend_schema_view(
-#     get=extend_schema(auth=[], description="List all categories (no token required)"),
-#     post=extend_schema(description="Create a new category (admin only)", summary="Admin"),
-# )
-# @extend_schema(tags=['Brand & Category'])
-# class BrandListCreateAPIView(ListCreateAPIView):
-#     queryset = Brand.objects.all()
-#     serializer_class = BrandModelSerializer
-#
-#     def get_permissions(self):
-#         if self.request.method == 'POST':
-#             return [IsAdminUser()]
-#         return []
-#
-#
-# @extend_schema(tags=['Brand & Category'])
-# class BrandRetrieveAPIView(RetrieveAPIView):
-#     queryset = Brand.objects.all()
-#     serializer_class = BrandModelSerializer
-#     authentication_classes = ()
-#     lookup_field = 'name'
-
-
+@extend_schema(tags=['Rentals'])
 class UserProfileCreateAPIView(CreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = VerifiedUserModelSerializer
@@ -223,22 +221,23 @@ class LongTermRentalListCreateAPIView(ListCreateAPIView):
         try:
             profile = UserProfile.objects.get(user=self.request.user)
         except UserProfile.DoesNotExist:
-            profile = UserProfile.objects.create(
-                user=self.request.user,
-                first_name=getattr(self.request.user, 'first_name', ''),
-                last_name=getattr(self.request.user, 'last_name', ''),
-                data_of_birth=None,
-                driver_licence_date_of_issue=None,
-                passport_series=''
-            )
+            return ValidationError({"detail": "UserProfile is missing. Please complete profile first."})
         serializer.save(user=profile)
 
+
     # def perform_create(self, serializer):
-    #     try:
-    #         profile = UserProfile.objects.get(user=self.request.user)
-    #     except UserProfile.DoesNotExist:
-    #         profile = UserProfile.objects.create(user=self.request.user)
-    #     serializer.save(user=profile)
+        # try:
+        #     profile = UserProfile.objects.get(user=self.request.user)
+        # except UserProfile.DoesNotExist:
+        #     profile = UserProfile.objects.create(
+        #         user=self.request.user,
+        #         first_name=getattr(self.request.user, 'first_name', ''),
+        #         last_name=getattr(self.request.user, 'last_name', ''),
+        #         data_of_birth=None,
+        #         driver_licence_date_of_issue=None,
+        #         passport_series=''
+        #     )
+        # serializer.save(user=profile)
 
 
 @extend_schema(tags=['Rentals'])

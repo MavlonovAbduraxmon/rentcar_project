@@ -108,8 +108,8 @@ class LongTermRental(CreatedBaseModel):
         CASH = 'cash', 'Cash'
         CARD = 'card', 'Card'
 
-    car = ForeignKey('apps.Car', CASCADE, related_name='longtermrental')
-    user = ForeignKey('apps.User', CASCADE, related_name='user')
+    car = ForeignKey('apps.Car', CASCADE, related_name='car')
+    user = ForeignKey('apps.UserProfile', CASCADE, related_name='rentals')
     pick_up_location = CharField(max_length=255)
     pick_up_data_time = DateTimeField()
     drop_of_location = CharField(max_length=255)
