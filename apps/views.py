@@ -117,6 +117,7 @@ class CarListCreateAPIView(ListCreateAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+
 @extend_schema_view(
     put=extend_schema(description="Create a new category (admin only)", summary="Admin"),
     patch=extend_schema(description="Create a new category (admin only)", summary="Admin"),
@@ -143,7 +144,6 @@ class BrandListCreateAPIView(ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandModelSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
-
 
 
 @extend_schema(tags=['Car Brand & Categories'])
@@ -217,7 +217,6 @@ class LongTermRentalListCreateAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
-
 
     def perform_create(self, serializer):
         try:
