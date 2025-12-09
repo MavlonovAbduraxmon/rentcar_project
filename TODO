@@ -45,7 +45,6 @@ You have 114 seconds left
 14. car list apida, brand va rasm qaytarishi kk
 
 15.
-
 apilarni togrilash (yoki register api qoshish)
 GET
 /en/api/v1/rentals/history
